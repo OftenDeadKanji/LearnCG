@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{ddcec6f3-911f-430e-a474-4c9a66d49ddc}</ProjectGuid>
+    <RootNamespace>Main</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(ProjectDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)bin-int\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(ProjectDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)bin-int\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)dependencies\include\;$(ProjectDir)src\pch\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3_d.lib;libboost_program_options-vc143-mt-gd-x64-1_78.lib;libboost_filesystem-vc143-mt-gd-x64-1_78.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)dependencies\lib_debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(ProjectDir)dependencies\include\;$(ProjectDir)src\pch\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;libboost_program_options-vc143-mt-x64-1_78.lib;libboost_filesystem-vc143-mt-x64-1_78.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)dependencies\lib_release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Application\GLFW\applicationGLFW.cpp" />
+    <ClCompile Include="src\EventSystem\GLFW\EventManager\eventManagerGLFW.cpp" />
+    <ClCompile Include="src\EventSystem\General\EventManager\eventManager.cpp" />
+    <ClCompile Include="src\EventSystem\General\Keyboard\keyboard.cpp" />
+    <ClCompile Include="src\EventSystem\General\Mouse\mouse.cpp" />
+    <ClCompile Include="src\EventSystem\GLFW\Keyboard\keyboardKeyActionGLFW.cpp" />
+    <ClCompile Include="src\EventSystem\GLFW\Keyboard\keyboardKeyGLFW.cpp" />
+    <ClCompile Include="src\EventSystem\GLFW\Mouse\mouseButtonActionGLFW.cpp" />
+    <ClCompile Include="src\Utilities\APIFactory.cpp" />
+    <ClCompile Include="src\Application\Settings\settings.cpp" />
+    <ClCompile Include="src\Application\MVC\controller.cpp" />
+    <ClCompile Include="src\Application\MVC\model.cpp" />
+    <ClCompile Include="src\Application\General\application.cpp" />
+    <ClCompile Include="dependencies\src\glad.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="dependencies\src\stb_image.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\pch\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\Rendering\General\Window\window.cpp" />
+    <ClCompile Include="src\Rendering\General\Window\windowProperties.cpp" />
+    <ClCompile Include="src\Utilities\types.cpp" />
+    <ClCompile Include="src\Rendering\OpenGL\Window\windowOpenGL.cpp" />
+    <ClCompile Include="src\Application\MVC\view.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Application\GLFW\applicationGLFW.h" />
+    <ClInclude Include="dependencies\include\SimpleINI\ConvertUTF.h" />
+    <ClInclude Include="dependencies\include\SimpleINI\SimpleIni.h" />
+    <ClInclude Include="src\EventSystem\GLFW\EventManager\eventManagerGLFW.h" />
+    <ClInclude Include="src\EventSystem\General\EventManager\eventManager.h" />
+    <ClInclude Include="src\EventSystem\General\EventManager\eventType.h" />
+    <ClInclude Include="src\EventSystem\General\Keyboard\keyboard.h" />
+    <ClInclude Include="src\EventSystem\General\Keyboard\keyboardKey.h" />
+    <ClInclude Include="src\EventSystem\General\Keyboard\keyboardKeyAction.h" />
+    <ClInclude Include="src\EventSystem\General\Mouse\mouse.h" />
+    <ClInclude Include="src\EventSystem\General\Mouse\mouseButton.h" />
+    <ClInclude Include="src\EventSystem\General\Mouse\mouseButtonAction.h" />
+    <ClInclude Include="src\EventSystem\GLFW\Keyboard\keyboardKeyActionGLFW.h" />
+    <ClInclude Include="src\EventSystem\GLFW\Keyboard\keyboardKeyGLFW.h" />
+    <ClInclude Include="src\EventSystem\GLFW\Mouse\mouseButtonActionGLFW.h" />
+    <ClInclude Include="src\EventSystem\GLFW\Mouse\mouseButtonGLFW.h" />
+    <ClInclude Include="src\Utilities\property.h" />
+    <ClInclude Include="src\Utilities\APIFactory.h" />
+    <ClInclude Include="src\Application\Settings\settings.h" />
+    <ClInclude Include="src\Application\MVC\controller.h" />
+    <ClInclude Include="src\Application\MVC\model.h" />
+    <ClInclude Include="src\Application\General\application.h" />
+    <ClInclude Include="dependencies\include\stb_image.h" />
+    <ClInclude Include="src\pch\pch.h" />
+    <ClInclude Include="src\Rendering\General\Renderer\rendererType.h" />
+    <ClInclude Include="src\Rendering\General\Window\window.h" />
+    <ClInclude Include="src\Rendering\General\Window\windowMode.h" />
+    <ClInclude Include="src\Rendering\General\Window\windowProperties.h" />
+    <ClInclude Include="src\Utilities\types.h" />
+    <ClInclude Include="src\Rendering\OpenGL\Window\windowOpenGL.h" />
+    <ClInclude Include="src\Application\MVC\view.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\EventSystem\GLFW\Mouse\mouseButtonGLFW.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

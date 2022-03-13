@@ -103,6 +103,7 @@
     <ClCompile Include="src\EventSystem\GLFW\Keyboard\keyboardKeyActionGLFW.cpp" />
     <ClCompile Include="src\EventSystem\GLFW\Keyboard\keyboardKeyGLFW.cpp" />
     <ClCompile Include="src\EventSystem\GLFW\Mouse\mouseButtonActionGLFW.cpp" />
+    <ClCompile Include="src\Rendering\General\Vertex\vertex.cpp" />
     <ClCompile Include="src\Utilities\APIFactory.cpp" />
     <ClCompile Include="src\Application\Settings\settings.cpp" />
     <ClCompile Include="src\Application\MVC\controller.cpp" />
@@ -144,6 +145,7 @@
     <ClInclude Include="src\EventSystem\GLFW\Keyboard\keyboardKeyGLFW.h" />
     <ClInclude Include="src\EventSystem\GLFW\Mouse\mouseButtonActionGLFW.h" />
     <ClInclude Include="src\EventSystem\GLFW\Mouse\mouseButtonGLFW.h" />
+    <ClInclude Include="src\Rendering\General\Vertex\vertex.h" />
     <ClInclude Include="src\Utilities\property.h" />
     <ClInclude Include="src\Utilities\APIFactory.h" />
     <ClInclude Include="src\Application\Settings\settings.h" />

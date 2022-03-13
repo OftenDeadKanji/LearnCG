@@ -9,6 +9,9 @@ namespace RedWood
 	using vec3 = glm::vec3;
 	using vec3i = glm::ivec3;
 
+	using vec4 = glm::vec4;
+	using vec4i = glm::ivec4;
+
 	using mat4 = glm::mat4;
 
 	using Size = vec2;

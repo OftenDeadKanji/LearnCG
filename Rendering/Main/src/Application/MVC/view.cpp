@@ -9,7 +9,7 @@ namespace RedWood::MVC
 		APIFactory::createWindow(this->window);
 		APIFactory::createEventManager(this->eventManager);
 
-		this->window->attachEventManager(*this->eventManager.get());
+		this->window->attachEventManager(*this->eventManager);
 	}
 
 	void View::checkInput()
@@ -17,7 +17,7 @@ namespace RedWood::MVC
 		eventManager->checkForEvents();
 		while(!eventManager->isEventQueueEmpty())
 		{
-			auto eventType = this->eventManager->getEventTypeFromQueue();
+			const auto eventType = this->eventManager->getEventTypeFromQueue();
 			switch (eventType)
 			{
 			case EventSystem::EventType::WindowResized:

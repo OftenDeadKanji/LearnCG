@@ -106,13 +106,16 @@ namespace RedWood::MVC
 			camera.moveToLocalFront(0.001f);
 		}
 
-		float yaw = EventSystem::Mouse::position.x - this->mousePrevPos.x;
-		float pitch = EventSystem::Mouse::position.y - this->mousePrevPos.y;
+		//if(EventSystem::Mouse::buttons[static_cast<size_t>(EventSystem::MouseButton::Left)])
+		//{
+			float yaw = EventSystem::Mouse::position.x - this->mousePrevPos.x;
+			float pitch = EventSystem::Mouse::position.y - this->mousePrevPos.y;
 
-		vec3 cameraRotation(pitch, yaw, 0.0f);
-		this->camera.rotateCamera(cameraRotation * 0.03f);
+			vec3 cameraRotation(pitch, yaw, 0.0f);
+			this->camera.rotateCamera(cameraRotation * 0.03f);
 
-		this->mousePrevPos = EventSystem::Mouse::position;
+			this->mousePrevPos = EventSystem::Mouse::position;
+		//}
 	}
 
 	void View::render()

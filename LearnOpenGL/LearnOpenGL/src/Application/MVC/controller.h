@@ -18,6 +18,7 @@ namespace RedWood::MVC
 		[[nodiscard]] bool shouldApplicationRun() const;
 
 		void windowCloseCallback();
+		void keyboardKeyPressCallback();
 	private:
 		MVC::Model model;
 		MVC::View view;

@@ -94,6 +94,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Rendering\Camera\camera.cpp" />
     <ClCompile Include="dependencies\src\glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
@@ -126,6 +127,7 @@
     <ClCompile Include="src\Rendering\Shader\subShader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Rendering\Camera\camera.h" />
     <ClInclude Include="src\Rendering\Shader\shader.h" />
     <ClInclude Include="src\Application\General\application.h" />
     <ClInclude Include="src\Application\MVC\controller.h" />

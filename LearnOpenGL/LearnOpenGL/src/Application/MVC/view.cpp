@@ -6,7 +6,9 @@
 namespace RedWood::MVC
 {
 	View::View(MVC::Controller& controller)
-		: controller(controller), window(WindowProperties({ 1600, 900 }, WindowMode::Windowed, "LearnOpenGL", ""))
+		: controller(controller),
+		window(WindowProperties({ 1600, 900 }, WindowMode::Windowed, "LearnOpenGL", "")),
+		camera({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f })
 	{
 		this->window.attachEventManager(this->eventManager);
 
@@ -45,12 +47,6 @@ namespace RedWood::MVC
 			}
 		};
 
-		float vertices[] = {
-			-0.5f, -0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	 0.0f,  0.5f, 0.0f
-		};
-
 		Renderer::bindVertexArray(triangleVAO);
 		Renderer::bindVertexBuffer(triangleVBO);
 
@@ -62,6 +58,8 @@ namespace RedWood::MVC
 
 		//Renderer::unbindVertexBuffer();
 		//Renderer::unbindVertexArray();
+
+		this->mousePrevPos = window.getSize() * 0.5f;
 	}
 
 	void View::checkInput()
@@ -78,6 +76,7 @@ namespace RedWood::MVC
 					this->controller.windowCloseCallback();
 					break;
 				case EventSystem::EventType::KeyboardKeyPressed:
+					this->controller.keyboardKeyPressCallback();
 					break;
 				case EventSystem::EventType::KeyboardKeyReleased:
 					break;
@@ -89,6 +88,31 @@ namespace RedWood::MVC
 					break;
 			}
 		}
+
+		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyA)])
+		{
+			camera.moveToLocalRight(-0.001f);
+		}
+		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyD)])
+		{
+			camera.moveToLocalRight(0.001f);
+		}
+		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyS)])
+		{
+			camera.moveToLocalFront(-0.001f);
+		}
+		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyW)])
+		{
+			camera.moveToLocalFront(0.001f);
+		}
+
+		float yaw = EventSystem::Mouse::position.x - this->mousePrevPos.x;
+		float pitch = EventSystem::Mouse::position.y - this->mousePrevPos.y;
+
+		vec3 cameraRotation(pitch, yaw, 0.0f);
+		this->camera.rotateCamera(cameraRotation * 0.03f);
+
+		this->mousePrevPos = EventSystem::Mouse::position;
 	}
 
 	void View::render()
@@ -96,6 +120,9 @@ namespace RedWood::MVC
 		window.fillWithColorRGB({ 120, 230, 85 });
 
 		Renderer::useShader(mainShader);
+		mainShader.setMat4("viewMatrix", camera.getViewMatrix());
+		mainShader.setMat4("projMatrix", camera.getProjectionMatrix());
+
 		Renderer::bindVertexArray(triangleVAO);
 		Renderer::drawArrays(3);
 

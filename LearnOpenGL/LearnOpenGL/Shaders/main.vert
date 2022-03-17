@@ -7,8 +7,11 @@ layout(location = 1) in vec3 in_normal;
 
 out vec4 vo_color;
 
+uniform mat4 viewMatrix;
+uniform mat4 projMatrix;
+
 void main()
 {
-	gl_Position = vec4(in_pos, 1.0f);
+	gl_Position = projMatrix * viewMatrix * vec4(in_pos, 1.0f);
 	vo_color = in_color;
 }

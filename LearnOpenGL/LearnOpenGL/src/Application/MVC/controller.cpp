@@ -32,4 +32,12 @@ namespace RedWood::MVC
 	{
 		this->mainLoopCondition = false;
 	}
+
+	void Controller::keyboardKeyPressCallback()
+	{
+		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyEscape)])
+		{
+			this->mainLoopCondition = false;
+		}
+	}
 }

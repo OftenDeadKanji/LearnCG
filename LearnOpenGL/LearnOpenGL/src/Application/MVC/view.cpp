@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "view.h"
-#include "../../Rendering/renderer.h"
 #include "controller.h"
 
 namespace RedWood::MVC
@@ -27,37 +26,37 @@ namespace RedWood::MVC
 			Vertex
 			{
 				{-0.5f, -0.5f, 0.0f},
-				{0.9f, 0.5f, 0.1f, 1.0f},
 				{0.0f, 0.0f},
 				{0.0f, 0.0f, 0.0f}
 			},
 			Vertex
 			{
 				{0.5f, -0.5f, 0.0f},
-				{0.3f, 0.1f, 0.1f, 1.0f},
 				{0.0f, 0.0f},
 				{0.0f, 0.0f, 0.0f}
 			},
 			Vertex
 			{
 				{0.0f, 0.5f, 0.0f},
-				{0.3f, 0.5f, 0.5f, 1.0f},
 				{0.0f, 0.0f},
 				{0.0f, 0.0f, 0.0f}
 			}
 		};
 
-		Renderer::bindVertexArray(triangleVAO);
-		Renderer::bindVertexBuffer(triangleVBO);
+		glGenVertexArrays(1, &triangleVAO);
+		glGenBuffers(1, &triangleVBO);
 
-		Renderer::bufferVertexBufferData(triangle.data(), sizeof(Vertex) * triangle.size());
-		Renderer::setAttributesPointer(0, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, position));
-		Renderer::setAttributesPointer(1, 4, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, color));
-		Renderer::setAttributesPointer(2, 2, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, textureCoords));
-		Renderer::setAttributesPointer(3, 3, GL_FLOAT, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+		glBindVertexArray(triangleVAO);
+		glBindBuffer(GL_ARRAY_BUFFER, triangleVBO);
 
-		//Renderer::unbindVertexBuffer();
-		//Renderer::unbindVertexArray();
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * triangle.size(), triangle.data(), GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, position)));
+		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, textureCoords)));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, normal)));
+		glEnableVertexAttribArray(2);
 
 		this->mousePrevPos = window.getSize() * 0.5f;
 	}
@@ -122,12 +121,12 @@ namespace RedWood::MVC
 	{
 		window.fillWithColorRGB({ 120, 230, 85 });
 
-		Renderer::useShader(mainShader);
+		mainShader.use();
 		mainShader.setMat4("viewMatrix", camera.getViewMatrix());
 		mainShader.setMat4("projMatrix", camera.getProjectionMatrix());
 
-		Renderer::bindVertexArray(triangleVAO);
-		Renderer::drawArrays(3);
+		glBindVertexArray(this->triangleVAO);
+		glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		window.swapBuffers();
 	}

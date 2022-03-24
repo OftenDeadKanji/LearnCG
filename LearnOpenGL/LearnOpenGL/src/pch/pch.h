@@ -11,7 +11,10 @@
 #include <queue>
 #include <unordered_map>
 
-//dependencies
+// C++ boost
+#include <boost/filesystem.hpp>
+
+// dependencies
 #include "glad/glad.h"
 
 #include "GLFW/glfw3.h"
@@ -23,8 +26,15 @@
 #include "glm/gtc/quaternion.hpp"
 #include "glm/gtx/quaternion.hpp"
 
-//this project
+#include "stb_image.h"
+
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
+
+// this project
 #include "../Utilities/types.h"
+#include "../ResourceManager/resourceManager.h"
 
 #include "../EventSystem/Keyboard/keyboardKeyAction.h"
 #include "../EventSystem/Keyboard/keyboardKey.h"

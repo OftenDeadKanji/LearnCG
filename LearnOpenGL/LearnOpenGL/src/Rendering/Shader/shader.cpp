@@ -102,6 +102,11 @@ namespace RedWood
 		return this->shaderID;
 	}
 
+	void Shader::use() const
+	{
+		glUseProgram(this->shaderID);
+	}
+
 	GLint Shader::getUniformLocation(const std::string& name) const
 	{
 		if(this->uniformLocation.contains(name))

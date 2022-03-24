@@ -68,7 +68,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)dependencies\lib\debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc143-mtd.lib;zlibstaticd.lib;libboost_filesystem-vc143-mt-gd-x64-1_78.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -90,10 +90,12 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(ProjectDir)dependencies\lib\release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;glfw3.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;glfw3.lib;assimp-vc143-mt.lib;zlibstatic.lib;libboost_filesystem-vc143-mt-x64-1_78.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\ResourceManager\resourceManager.cpp" />
+    <ClCompile Include="src\Mesh\mesh.cpp" />
     <ClCompile Include="src\Rendering\Camera\camera.cpp" />
     <ClCompile Include="dependencies\src\glad.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -116,17 +118,17 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\Rendering\OpenGL Objects\ebo.cpp" />
-    <ClCompile Include="src\Rendering\renderer.cpp" />
-    <ClCompile Include="src\Rendering\OpenGL Objects\vao.cpp" />
-    <ClCompile Include="src\Rendering\OpenGL Objects\vbo.cpp" />
+    <ClCompile Include="src\Rendering\Texture\texture.cpp" />
     <ClCompile Include="src\Rendering\Vertex\vertex.cpp" />
     <ClCompile Include="src\Rendering\Window\window.cpp" />
     <ClCompile Include="src\Rendering\Window\windowProperties.cpp" />
     <ClCompile Include="src\Utilities\types.cpp" />
     <ClCompile Include="src\Rendering\Shader\subShader.cpp" />
+    <ClCompile Include="src\Mesh\submesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ResourceManager\resourceManager.h" />
+    <ClInclude Include="src\Mesh\mesh.h" />
     <ClInclude Include="src\Rendering\Camera\camera.h" />
     <ClInclude Include="src\Rendering\Shader\shader.h" />
     <ClInclude Include="src\Application\General\application.h" />
@@ -142,16 +144,14 @@
     <ClInclude Include="src\EventSystem\Mouse\mouseButton.h" />
     <ClInclude Include="src\EventSystem\Mouse\mouseButtonAction.h" />
     <ClInclude Include="src\pch\pch.h" />
-    <ClInclude Include="src\Rendering\OpenGL Objects\ebo.h" />
-    <ClInclude Include="src\Rendering\renderer.h" />
-    <ClInclude Include="src\Rendering\OpenGL Objects\vao.h" />
-    <ClInclude Include="src\Rendering\OpenGL Objects\vbo.h" />
+    <ClInclude Include="src\Rendering\Texture\texture.h" />
     <ClInclude Include="src\Rendering\Vertex\vertex.h" />
     <ClInclude Include="src\Rendering\Window\window.h" />
     <ClInclude Include="src\Rendering\Window\windowMode.h" />
     <ClInclude Include="src\Rendering\Window\windowProperties.h" />
     <ClInclude Include="src\Utilities\types.h" />
     <ClInclude Include="src\Rendering\Shader\subShader.h" />
+    <ClInclude Include="src\Mesh\submesh.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\main.frag" />

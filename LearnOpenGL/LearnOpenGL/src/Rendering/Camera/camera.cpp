@@ -11,19 +11,11 @@ namespace RedWood
 
 	glm::mat4 Camera::getViewMatrix() const
 	{
-		//auto view = glm::toMat4(this->rotation);
-		//view = glm::translate(view, this->position);
-
 		glm::mat4 translate(1.0f);
 		translate = glm::translate(translate, this->position);
 
 		glm::mat4 rotate(1.0f);
 		rotate = glm::mat4_cast(this->rotation);
-
-		//auto forward = glm::vec3(0.0f, 0.0f, 1.0f);
-		//forward = glm::rotate(this->rotation, forward);
-
-		//auto normalLookAt = glm::lookAt(this->position, forward, this->worldUp);
 
 		return rotate * translate;
 	}
@@ -57,34 +49,16 @@ namespace RedWood
 
 	void Camera::moveToLocalFront(float distance)
 	{
-		const auto forward = glm::rotate(this->rotation, glm::vec3(0.0f, 0.0f, 1.0f));
+		auto forward = glm::rotate(this->rotation, glm::vec3(0.0f, 0.0f, 1.0f));
+		forward.x *= -1;
 		this->position += distance * forward;
-	}
 
-	void Camera::pitchCamera(float angleInDeg)
-	{
-		
-	}
-
-	void Camera::yawCamera(float angleInDeg)
-	{
-		
+		//std::cout << forward.x << '\t' << forward.y << '\t' << forward.z << '\n';
 	}
 
 	void Camera::rotateCamera(vec3 anglesInDeg)
 	{
-		//std::cout << "\n\n" << anglesInDeg.x << '\t' << anglesInDeg.y << '\t' << anglesInDeg.z << '\n';
 		const glm::quat rotation(glm::radians(anglesInDeg));
-
-		//auto euler = glm::degrees(glm::eulerAngles(this->rotation));
-		//std::cout << euler.x << '\t' << euler.y << '\t' << euler.z << '\n';
-
 		this->rotation = glm::normalize(this->rotation * rotation);
-		
-
-		//auto rot = glm::quat(glm::radians(vec3(0.1f, 0.0f, 0.0f)));
-		//this->rotation *= rot;
-		//euler = glm::degrees(glm::eulerAngles(this->rotation));
-		//std::cout << euler.x << '\t' << euler.y << '\t' << euler.z << "\n\n";
 	}
 }

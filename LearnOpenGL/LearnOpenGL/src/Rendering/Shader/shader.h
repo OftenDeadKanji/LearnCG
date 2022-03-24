@@ -25,6 +25,8 @@ namespace RedWood
 		void setMat4(const std::string& name, const glm::mat4& matrix) const;
 
 		GLuint getShaderID() const;
+
+		void use() const;
 	private:
 		GLint getUniformLocation(const std::string& name) const;
 

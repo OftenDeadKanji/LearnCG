@@ -22,7 +22,7 @@ namespace RedWood
 			return &this->textures.at(textureFilePath);
 		}
 
-		this->textures.insert(std::make_pair(textureFilePath, Texture::createTextureFromFile(textureFilePath)));
+		this->textures.insert(std::make_pair(textureFilePath, Texture::createTextureFromFile(textureFilePath, TextureType::Diffuse)));
 		return &this->textures.at(textureFilePath);
 	}
 

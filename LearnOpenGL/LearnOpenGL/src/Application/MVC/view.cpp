@@ -7,7 +7,8 @@ namespace RedWood::MVC
 	View::View(MVC::Controller& controller)
 		: controller(controller),
 		window(WindowProperties({ 1600, 900 }, WindowMode::Windowed, "LearnOpenGL", "")),
-		camera({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f })
+		camera({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f }),
+	backpack("Resources/Models/backpack/backpack.obj")
 	{
 		this->window.attachEventManager(this->eventManager);
 
@@ -59,6 +60,17 @@ namespace RedWood::MVC
 		glEnableVertexAttribArray(2);
 
 		this->mousePrevPos = window.getSize() * 0.5f;
+
+		auto meshVert = SubShader::createShaderFromFile("Shaders/model_main.vert", SubShader::Type::Vertex);
+		auto meshFrag = SubShader::createShaderFromFile("Shaders/model_main.frag", SubShader::Type::Fragment);
+
+		this->meshShader.attachSubShader(meshVert);
+		this->meshShader.attachSubShader(meshFrag);
+
+		if (!this->meshShader.tryToLinkShader())
+		{
+			std::cout << "Linking main shader failed.\n";
+		}
 	}
 
 	void View::checkInput()
@@ -127,6 +139,11 @@ namespace RedWood::MVC
 
 		glBindVertexArray(this->triangleVAO);
 		glDrawArrays(GL_TRIANGLES, 0, 3);
+
+		meshShader.use();
+		meshShader.setMat4("view", camera.getViewMatrix());
+		meshShader.setMat4("proj", camera.getProjectionMatrix());
+		backpack.render(meshShader);
 
 		window.swapBuffers();
 	}

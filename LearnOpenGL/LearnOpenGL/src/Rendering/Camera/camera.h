@@ -17,14 +17,12 @@ namespace RedWood
 		void moveToLocalUp(float distance);
 		void moveToLocalFront(float distance);
 
-		void pitchCamera(float angleInDeg);
-		void yawCamera(float angleInDeg);
 		void rotateCamera(vec3 angles);
 	private:
 		vec3 position {};
 
 		static constexpr vec3 worldUp = { 0.0f, 1.0f, 0.0f };
 
-		glm::quat rotation;
+		glm::quat orientation;
 	};
 }

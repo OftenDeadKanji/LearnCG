@@ -5,6 +5,8 @@
 #include "../../Rendering/Shader/shader.h"
 #include "../../Rendering/Camera/camera.h"
 
+#include "../../Mesh/mesh.h"
+
 namespace RedWood::MVC
 {
 	class Controller;
@@ -31,6 +33,9 @@ namespace RedWood::MVC
 		GLuint triangleVAO, triangleVBO;
 
 		vec2 mousePrevPos {};
+
+		Shader meshShader;
+		Mesh backpack;
 	};
 }
 #endif

@@ -1,12 +1,14 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
+#include "textureType.h"
+
 namespace RedWood
 {
 	struct Texture
 	{
 	private:
-		Texture();
+		explicit Texture(TextureType type);
 	public:
 		Texture(const Texture&) = delete;
 		Texture(Texture&&) noexcept;
@@ -15,12 +17,13 @@ namespace RedWood
 		Texture& operator=(const Texture&) = delete;
 		Texture& operator=(Texture&&) noexcept;
 
-		static Texture createTextureFromFile(std::string filePath);
+		static Texture createTextureFromFile(std::string filePath, TextureType type);
 
 		void bind() const;
 		void unbind() const;
 
 		GLuint id = 0;
+		TextureType type;
 		std::string path;
 	};
 }

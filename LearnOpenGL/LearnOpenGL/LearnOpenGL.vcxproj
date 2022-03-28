@@ -127,6 +127,7 @@
     <ClCompile Include="src\Mesh\submesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Rendering\Texture\textureType.h" />
     <ClInclude Include="src\ResourceManager\resourceManager.h" />
     <ClInclude Include="src\Mesh\mesh.h" />
     <ClInclude Include="src\Rendering\Camera\camera.h" />
@@ -156,6 +157,8 @@
   <ItemGroup>
     <None Include="Shaders\main.frag" />
     <None Include="Shaders\main.vert" />
+    <None Include="Shaders\model_main.frag" />
+    <None Include="Shaders\model_main.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

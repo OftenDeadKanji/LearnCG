@@ -3,12 +3,14 @@
 
 namespace RedWood
 {
-	Texture::Texture()
+	Texture::Texture(TextureType type)
+		: type(type)
 	{
 		glGenTextures(1, &this->id);
 	}
 
 	Texture::Texture(Texture&& other) noexcept
+		: type(other.type)
 	{
 		const auto tmp = this->id;
 		this->id = other.id;
@@ -27,6 +29,8 @@ namespace RedWood
 	{
 		if(this != &other)
 		{
+			type = other.type;
+
 			const auto tmp = this->id;
 			this->id = other.id;
 			other.id = tmp;
@@ -35,9 +39,9 @@ namespace RedWood
 		return *this;
 	}
 
-	Texture Texture::createTextureFromFile(std::string filePath)
+	Texture Texture::createTextureFromFile(std::string filePath, TextureType type)
 	{
-		Texture toReturn;
+		Texture toReturn(type);
 		toReturn.path = std::move(filePath);
 
 		int width, height, nrChannels;

@@ -5,6 +5,7 @@
 namespace RedWood
 {
 	Mesh::Mesh(const std::string& filePath)
+		: directory(filePath.substr(0, filePath.find_last_of('/')))
 	{
 		Assimp::Importer importer;
 
@@ -21,6 +22,14 @@ namespace RedWood
 		}
 
 		processNode(scene, scene->mRootNode);
+	}
+
+	void Mesh::render(const Shader& shader)
+	{
+		for(auto& subMesh : this->subMeshes)
+		{
+			subMesh.render(shader);
+		}
 	}
 
 	void Mesh::processNode(const aiScene* scene, const aiNode* node)
@@ -86,7 +95,7 @@ namespace RedWood
 		{
 			aiString str;
 			material->GetTexture(type, i, &str);
-			textures.push_back(ResourceManager::getInstance().getTexture(str.C_Str()));
+			textures.push_back(ResourceManager::getInstance().getTexture(this->directory + "/" + str.C_Str()));
 		}
 
 		return textures;

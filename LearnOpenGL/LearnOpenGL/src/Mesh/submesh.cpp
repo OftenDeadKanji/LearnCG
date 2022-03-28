@@ -37,6 +37,32 @@ namespace RedWood
 
 	void SubMesh::render(const Shader& shader)
 	{
-		
+		unsigned int diffuseNr = 1;
+		unsigned int specularNr = 1;
+
+		for(unsigned int i = 0; i < this->textures.size(); ++i)
+		{
+			glActiveTexture(GL_TEXTURE0 + i);
+
+			TextureType type = this->textures[i]->type;
+
+			std::string number;
+			switch (type)
+			{
+			case TextureType::Diffuse:
+				number = std::to_string(diffuseNr++);
+				break;
+			case TextureType::Specular:
+				number = std::to_string(specularNr++);
+				break;
+			}
+
+			shader.setInt("material.texture_" + TextureTypeToString(type) + number, i);
+			this->textures[i]->bind();
+		}
+
+		glBindVertexArray(this->vao);
+		glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
 	}
 }

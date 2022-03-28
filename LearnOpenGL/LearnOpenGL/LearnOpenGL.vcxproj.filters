@@ -158,9 +158,14 @@
     <ClInclude Include="src\ResourceManager\resourceManager.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
+    <ClInclude Include="src\Rendering\Texture\textureType.h">
+      <Filter>Pliki nagłówkowe</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\main.vert" />
     <None Include="Shaders\main.frag" />
+    <None Include="Shaders\model_main.vert" />
+    <None Include="Shaders\model_main.frag" />
   </ItemGroup>
 </Project>

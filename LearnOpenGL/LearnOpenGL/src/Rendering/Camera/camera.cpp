@@ -6,7 +6,7 @@ namespace RedWood
 	Camera::Camera(const vec3& position, const vec3& target)
 		: position(position)
 	{
-		this->rotation = glm::quatLookAt(target, Camera::worldUp);
+		this->orientation = glm::quatLookAt(target, Camera::worldUp);
 	}
 
 	glm::mat4 Camera::getViewMatrix() const
@@ -14,8 +14,7 @@ namespace RedWood
 		glm::mat4 translate(1.0f);
 		translate = glm::translate(translate, this->position);
 
-		glm::mat4 rotate(1.0f);
-		rotate = glm::mat4_cast(this->rotation);
+		const glm::mat4 rotate = glm::mat4_cast(this->orientation);
 
 		return rotate * translate;
 	}
@@ -37,28 +36,25 @@ namespace RedWood
 
 	void Camera::moveToLocalRight(float distance)
 	{
-		const auto right = glm::rotate(this->rotation, glm::vec3(-1.0f, 0.0f, 0.0f));
+		const auto right = glm::vec3(-1.0f, 0.0f, 0.0f) * this->orientation;
 		this->position += distance * right;
 	}
 
 	void Camera::moveToLocalUp(float distance)
 	{
-		const auto up =  glm::rotate(this->rotation, glm::vec3(0.0f, 1.0f, 0.0f));
+		const auto up =  glm::vec3(0.0f, 1.0f, 0.0f) * this->orientation;
 		this->position += distance * up;
 	}
 
 	void Camera::moveToLocalFront(float distance)
 	{
-		auto forward = glm::rotate(this->rotation, glm::vec3(0.0f, 0.0f, 1.0f));
-		forward.x *= -1;
+		const auto forward = glm::vec3(0.0f, 0.0f, 1.0f) * this->orientation;
 		this->position += distance * forward;
-
-		//std::cout << forward.x << '\t' << forward.y << '\t' << forward.z << '\n';
 	}
 
 	void Camera::rotateCamera(vec3 anglesInDeg)
 	{
 		const glm::quat rotation(glm::radians(anglesInDeg));
-		this->rotation = glm::normalize(this->rotation * rotation);
+		this->orientation = glm::normalize(this->orientation * rotation);
 	}
 }

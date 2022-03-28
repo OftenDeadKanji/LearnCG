@@ -44,6 +44,8 @@ namespace RedWood
 		Texture toReturn(type);
 		toReturn.path = std::move(filePath);
 
+		stbi_set_flip_vertically_on_load(true);
+
 		int width, height, nrChannels;
 		unsigned char* data = stbi_load(toReturn.path.c_str(), &width, &height, &nrChannels, 0);
 		if(!data)

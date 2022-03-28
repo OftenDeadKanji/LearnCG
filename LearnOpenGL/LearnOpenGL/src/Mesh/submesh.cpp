@@ -100,7 +100,7 @@ namespace RedWood
 				break;
 			}
 
-			shader.setInt("material.texture_" + TextureTypeToString(type) + number, i);
+			shader.setInt("texture_" + TextureTypeToString(type) + number, i);
 			this->textures[i]->bind();
 		}
 

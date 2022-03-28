@@ -8,7 +8,7 @@ namespace RedWood::MVC
 		: controller(controller),
 		window(WindowProperties({ 1600, 900 }, WindowMode::Windowed, "LearnOpenGL", "")),
 		camera({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f }),
-	backpack("Resources/Models/backpack/backpack.obj")
+		backpack("Resources/Models/backpack/backpack.obj")
 	{
 		this->window.attachEventManager(this->eventManager);
 
@@ -44,7 +44,7 @@ namespace RedWood::MVC
 			}
 		};
 
-		glGenVertexArrays(1, &triangleVAO);
+		/*glGenVertexArrays(1, &triangleVAO);
 		glGenBuffers(1, &triangleVBO);
 
 		glBindVertexArray(triangleVAO);
@@ -57,7 +57,7 @@ namespace RedWood::MVC
 		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, textureCoords)));
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, normal)));
-		glEnableVertexAttribArray(2);
+		glEnableVertexAttribArray(2);*/
 
 		this->mousePrevPos = window.getSize() * 0.5f;
 
@@ -133,12 +133,12 @@ namespace RedWood::MVC
 	{
 		window.fillWithColorRGB({ 120, 230, 85 });
 
-		mainShader.use();
-		mainShader.setMat4("viewMatrix", camera.getViewMatrix());
-		mainShader.setMat4("projMatrix", camera.getProjectionMatrix());
-
-		glBindVertexArray(this->triangleVAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		//mainShader.use();
+		//mainShader.setMat4("viewMatrix", camera.getViewMatrix());
+		//mainShader.setMat4("projMatrix", camera.getProjectionMatrix());
+		//
+		//glBindVertexArray(this->triangleVAO);
+		//glDrawArrays(GL_TRIANGLES, 0, 3);
 
 		meshShader.use();
 		meshShader.setMat4("view", camera.getViewMatrix());

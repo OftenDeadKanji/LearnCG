@@ -28,11 +28,54 @@ namespace RedWood
 		glBindVertexArray(0);
 	}
 
+	SubMesh::SubMesh(SubMesh&& other) noexcept
+		: vertices(std::move(other.vertices)), indices(std::move(other.indices)), textures(std::move(other.textures))
+	{
+		this->vao = other.vao;
+		other.vao = 0;
+
+		this->vbo = other.vbo;
+		other.vbo = 0;
+
+		this->ebo = other.ebo;
+		other.ebo = 0;
+	}
+
 	SubMesh::~SubMesh()
 	{
-		glDeleteBuffers(1, &ebo);
-		glDeleteBuffers(1, &vbo);
-		glDeleteVertexArrays(1, &vao);
+		if (this->ebo)
+		{
+			glDeleteBuffers(1, &ebo);
+		}
+		if (this->vbo)
+		{
+			glDeleteBuffers(1, &vbo);
+		}
+		if (this->vao)
+		{
+			glDeleteVertexArrays(1, &vao);
+		}
+	}
+
+	SubMesh& SubMesh::operator=(SubMesh&& other) noexcept
+	{
+		if (this != &other)
+		{
+			this->vertices = std::move(other.vertices);
+			this->indices = std::move(other.indices);
+			this->textures = std::move(other.textures);
+
+			this->vao = other.vao;
+			other.vao = 0;
+
+			this->vbo = other.vbo;
+			other.vbo = 0;
+
+			this->ebo = other.ebo;
+			other.ebo = 0;
+		}
+
+		return *this;
 	}
 
 	void SubMesh::render(const Shader& shader)
@@ -63,6 +106,6 @@ namespace RedWood
 
 		glBindVertexArray(this->vao);
 		glDrawElements(GL_TRIANGLES, this->indices.size(), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+		//glBindVertexArray(0);
 	}
 }

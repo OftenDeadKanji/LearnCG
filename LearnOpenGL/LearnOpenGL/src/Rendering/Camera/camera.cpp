@@ -54,7 +54,9 @@ namespace RedWood
 
 	void Camera::rotateCamera(vec3 anglesInDeg)
 	{
-		const glm::quat rotation(glm::radians(anglesInDeg));
-		this->orientation = glm::normalize(this->orientation * rotation);
+		const auto x = glm::angleAxis(glm::radians(anglesInDeg.x), vec3(1.0f, 0.0f, 0.0f));
+		const auto y = glm::angleAxis(glm::radians(anglesInDeg.y), vec3(0.0f, 1.0f, 0.0f));
+		
+		this->orientation = glm::normalize(x * this->orientation * y);
 	}
 }

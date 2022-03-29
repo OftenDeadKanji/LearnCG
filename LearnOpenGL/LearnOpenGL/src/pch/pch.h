@@ -10,6 +10,7 @@
 #include <array>
 #include <queue>
 #include <unordered_map>
+#include <chrono>
 
 // C++ boost
 #include <boost/filesystem.hpp>

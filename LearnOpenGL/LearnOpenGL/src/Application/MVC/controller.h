@@ -15,6 +15,8 @@ namespace RedWood::MVC
 		void update();
 		void render();
 
+		void updateDeltaTime();
+
 		[[nodiscard]] bool shouldApplicationRun() const;
 
 		void windowCloseCallback();
@@ -24,6 +26,9 @@ namespace RedWood::MVC
 		MVC::View view;
 
 		bool mainLoopCondition = true;
+
+		std::chrono::high_resolution_clock::time_point frameStart;
+		float deltaTime{};
 	};
 }
 

@@ -10,7 +10,7 @@ namespace RedWood::MVC
 
 	void Controller::processInput()
 	{
-		view.checkInput();
+		view.checkInput(this->deltaTime);
 	}
 
 	void Controller::update()
@@ -20,7 +20,15 @@ namespace RedWood::MVC
 
 	void Controller::render()
 	{
-		view.render();
+		view.render(this->deltaTime);
+	}
+
+	void Controller::updateDeltaTime()
+	{
+		const auto now = std::chrono::high_resolution_clock::now();
+		this->deltaTime =  std::chrono::duration_cast<std::chrono::nanoseconds>(now - this->frameStart).count() * 0.000000001;
+
+		this->frameStart = now;
 	}
 
 	bool Controller::shouldApplicationRun() const

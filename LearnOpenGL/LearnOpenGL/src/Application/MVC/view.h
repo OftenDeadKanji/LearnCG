@@ -16,8 +16,8 @@ namespace RedWood::MVC
 	public:
 		explicit View(MVC::Controller& controller);
 
-		void checkInput();
-		void render();
+		void checkInput(float deltaTime);
+		void render(float deltaTime);
 
 	private:
 		Controller& controller;

@@ -37,6 +37,7 @@ namespace RedWood
 		void mouseButtonCallback(EventSystem::MouseButton button, EventSystem::MouseButtonAction action) const;
 		void cursorPositionCallback(vec2 position) const;
 
+		void resetCursorPos();
 	private:
 		void createGLFWWindow();
 

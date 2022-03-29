@@ -57,6 +57,9 @@ namespace RedWood
 	{
 		this->createGLFWWindow();
 		this->initializeOpenGL();
+
+		glfwSetInputMode(this->glfwWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		glfwSetCursorPos(this->glfwWindow, this->properties.Size.x / 2.0, this->properties.Size.y / 2.0);
 	}
 
 	Window::Window(Window&& other) noexcept
@@ -170,6 +173,11 @@ namespace RedWood
 	void Window::cursorPositionCallback(vec2 position) const
 	{
 		this->eventManager->cursorPositionCallback(position);
+	}
+
+	void Window::resetCursorPos()
+	{
+		glfwSetCursorPos(this->glfwWindow, this->properties.Size.x / 2.0, this->properties.Size.y / 2.0);
 	}
 
 	void Window::createGLFWWindow()

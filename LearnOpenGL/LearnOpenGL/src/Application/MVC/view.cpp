@@ -73,7 +73,7 @@ namespace RedWood::MVC
 		}
 	}
 
-	void View::checkInput()
+	void View::checkInput(float deltaTime)
 	{
 		eventManager.checkForEvents();
 		while(!eventManager.isEventQueueEmpty())
@@ -102,34 +102,35 @@ namespace RedWood::MVC
 
 		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyA)])
 		{
-			camera.moveToLocalRight(-0.001f);
+			camera.moveToLocalRight(-7 * deltaTime);
 		}
 		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyD)])
 		{
-			camera.moveToLocalRight(0.001f);
+			camera.moveToLocalRight(7 * deltaTime);
 		}
 		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyS)])
 		{
-			camera.moveToLocalFront(-0.001f);
+			camera.moveToLocalFront(-7 * deltaTime);
 		}
 		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyW)])
 		{
-			camera.moveToLocalFront(0.001f);
+			camera.moveToLocalFront(7 * deltaTime);
 		}
 
 		//if(EventSystem::Mouse::buttons[static_cast<size_t>(EventSystem::MouseButton::Left)])
 		//{
-			float yaw = EventSystem::Mouse::position.x - this->mousePrevPos.x;
-			float pitch = EventSystem::Mouse::position.y - this->mousePrevPos.y;
+			float yaw = EventSystem::Mouse::position.x - 800.0f;
+			float pitch = EventSystem::Mouse::position.y - 450.f;
 
 			vec3 cameraRotation(pitch, yaw, 0.0f);
-			this->camera.rotateCamera(cameraRotation * 0.03f);
+			this->camera.rotateCamera(cameraRotation * 30.0f * deltaTime);
 
 			this->mousePrevPos = EventSystem::Mouse::position;
+			this->window.resetCursorPos();
 		//}
 	}
 
-	void View::render()
+	void View::render(float deltaTime)
 	{
 		window.fillWithColorRGB({ 120, 230, 85 });
 

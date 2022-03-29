@@ -11,6 +11,8 @@ namespace RedWood
 			controller.processInput();
 			controller.update();
 			controller.render();
+
+			controller.updateDeltaTime();
 		}
 	}
 }

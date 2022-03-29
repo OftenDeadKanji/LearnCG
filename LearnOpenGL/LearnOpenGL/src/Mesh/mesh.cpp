@@ -14,7 +14,8 @@ namespace RedWood
 												 aiProcess_Triangulate |
 												 aiProcess_JoinIdenticalVertices |
 												 aiProcess_SortByPType |
-												 aiProcess_FlipUVs);
+												 aiProcess_FlipUVs |
+												 aiProcess_CalcTangentSpace);
 		if(!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
 		{
 			std::cout << importer.GetErrorString() << '\n';
@@ -60,7 +61,14 @@ namespace RedWood
 				? vec2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y)
 				: vec2(0.0f, 0.0f);
 
-			vertices.emplace_back(position, textureCoordinates, normal);
+			vec3 tangent{}, bitangent{};
+			if(mesh->HasTangentsAndBitangents())
+			{
+				tangent = { mesh->mTangents[i].x, mesh->mTangents[i].y , mesh->mTangents[i].z };
+				bitangent = {mesh->mBitangents[i].x, mesh->mBitangents[i].y , mesh->mBitangents[i].z};
+			}
+
+			vertices.emplace_back(position, textureCoordinates, normal, tangent, bitangent);
 		}
 		
 		for(unsigned i = 0; i < mesh->mNumFaces; ++i)
@@ -77,25 +85,28 @@ namespace RedWood
 		{
 			aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
 
-			std::vector<Texture*> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
+			std::vector<Texture*> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, TextureType::Diffuse);
 			textures.insert(textures.end(), std::make_move_iterator(diffuseMaps.begin()), std::make_move_iterator(diffuseMaps.end()));
 
-			//std::vector<Texture*> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-			//textures.insert(textures.end(), std::make_move_iterator(specularMaps.begin()), std::make_move_iterator(specularMaps.end()));
+			std::vector<Texture*> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, TextureType::Specular);
+			textures.insert(textures.end(), std::make_move_iterator(specularMaps.begin()), std::make_move_iterator(specularMaps.end()));
+
+			std::vector<Texture*> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, TextureType::Normal);
+			textures.insert(textures.end(), std::make_move_iterator(normalMaps.begin()), std::make_move_iterator(normalMaps.end()));
 		}
 
 		return { vertices, indices, textures };
 	}
 
-	std::vector<Texture*> Mesh::loadMaterialTextures(const aiMaterial* material, aiTextureType type, const std::string& typeName)
+	std::vector<Texture*> Mesh::loadMaterialTextures(const aiMaterial* material, aiTextureType assimpTextureType, TextureType type)
 	{
 		std::vector<Texture*> textures;
 
-		for(unsigned i = 0; i < material->GetTextureCount(type);++i)
+		for(unsigned i = 0; i < material->GetTextureCount(assimpTextureType);++i)
 		{
 			aiString str;
-			material->GetTexture(type, i, &str);
-			textures.push_back(ResourceManager::getInstance().getTexture(this->directory + "/" + str.C_Str()));
+			material->GetTexture(assimpTextureType, i, &str);
+			textures.push_back(ResourceManager::getInstance().getTexture(this->directory + "/" + str.C_Str(), type));
 		}
 
 		return textures;

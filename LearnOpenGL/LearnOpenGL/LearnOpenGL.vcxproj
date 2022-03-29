@@ -94,6 +94,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Rendering\Light\directionalLight.cpp" />
     <ClCompile Include="src\ResourceManager\resourceManager.cpp" />
     <ClCompile Include="src\Mesh\mesh.cpp" />
     <ClCompile Include="src\Rendering\Camera\camera.cpp" />
@@ -127,6 +128,7 @@
     <ClCompile Include="src\Mesh\submesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Rendering\Light\directionalLight.h" />
     <ClInclude Include="src\Rendering\Texture\textureType.h" />
     <ClInclude Include="src\ResourceManager\resourceManager.h" />
     <ClInclude Include="src\Mesh\mesh.h" />

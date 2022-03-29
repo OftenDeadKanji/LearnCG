@@ -6,7 +6,8 @@ namespace RedWood
 	enum class TextureType
 	{
 		Diffuse,
-		Specular
+		Specular,
+		Normal
 	};
 
 	constexpr std::string TextureTypeToString(TextureType type)
@@ -17,6 +18,8 @@ namespace RedWood
 			return "Diffuse";
 		case TextureType::Specular:
 			return "Specular";
+		case TextureType::Normal:
+			return "Normal";
 		default:
 			return "None";
 		}

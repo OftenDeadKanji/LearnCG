@@ -18,15 +18,18 @@ namespace RedWood::EventSystem
 
 	void EventManager::keyboardKeyCallback(KeyboardKey key, KeyboardKeyAction action)
 	{
-		if(action == KeyboardKeyAction::Pressed)
+		if (key != KeyboardKey::KeyNone)
 		{
-			Keyboard::keys[static_cast<size_t>(key)] = true;
-			this->eventQueue.push(EventType::KeyboardKeyPressed);
-		}
-		else if(action == KeyboardKeyAction::Released)
-		{
-			Keyboard::keys[static_cast<size_t>(key)] = false;
-			this->eventQueue.push(EventType::KeyboardKeyReleased);
+			if (action == KeyboardKeyAction::Pressed)
+			{
+				Keyboard::keys[static_cast<size_t>(key)] = true;
+				this->eventQueue.push(EventType::KeyboardKeyPressed);
+			}
+			else if (action == KeyboardKeyAction::Released)
+			{
+				Keyboard::keys[static_cast<size_t>(key)] = false;
+				this->eventQueue.push(EventType::KeyboardKeyReleased);
+			}
 		}
 	}
 

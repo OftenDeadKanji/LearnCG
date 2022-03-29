@@ -24,6 +24,10 @@ namespace RedWood
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, normal)));
 		glEnableVertexAttribArray(2);
+		glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, tangent)));
+		glEnableVertexAttribArray(3);
+		glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(offsetof(Vertex, bitangent)));
+		glEnableVertexAttribArray(4);
 
 		glBindVertexArray(0);
 	}
@@ -80,27 +84,12 @@ namespace RedWood
 
 	void SubMesh::render(const Shader& shader)
 	{
-		unsigned int diffuseNr = 1;
-		unsigned int specularNr = 1;
-
 		for(unsigned int i = 0; i < this->textures.size(); ++i)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 
 			TextureType type = this->textures[i]->type;
-
-			std::string number;
-			switch (type)
-			{
-			case TextureType::Diffuse:
-				number = std::to_string(diffuseNr++);
-				break;
-			case TextureType::Specular:
-				number = std::to_string(specularNr++);
-				break;
-			}
-
-			shader.setInt("texture_" + TextureTypeToString(type) + number, i);
+			shader.setInt("material." + TextureTypeToString(type), i);
 			this->textures[i]->bind();
 		}
 

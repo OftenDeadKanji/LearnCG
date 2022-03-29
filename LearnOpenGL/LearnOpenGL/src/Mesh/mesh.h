@@ -13,7 +13,7 @@ namespace RedWood
 	private:
 		void processNode(const aiScene* scene, const aiNode* node);
 		SubMesh processSubMesh(const aiMesh* mesh, const aiScene* scene);
-		std::vector<Texture*> loadMaterialTextures(const aiMaterial* material, aiTextureType type, const std::string& typeName);
+		std::vector<Texture*> loadMaterialTextures(const aiMaterial* material, aiTextureType assimpTextureType, TextureType type);
 
 		std::vector<SubMesh> subMeshes;
 		std::string directory;

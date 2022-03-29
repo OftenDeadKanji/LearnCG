@@ -15,14 +15,14 @@ namespace RedWood
 		return instance == nullptr ? *(instance = new ResourceManager()) : *instance;
 	}
 
-	Texture* ResourceManager::getTexture(const std::string& textureFilePath)
+	Texture* ResourceManager::getTexture(const std::string& textureFilePath, TextureType type)
 	{
 		if(this->textures.contains(textureFilePath))
 		{
 			return &this->textures.at(textureFilePath);
 		}
 
-		this->textures.insert(std::make_pair(textureFilePath, Texture::createTextureFromFile(textureFilePath, TextureType::Diffuse)));
+		this->textures.insert(std::make_pair(textureFilePath, Texture::createTextureFromFile(textureFilePath, type)));
 		return &this->textures.at(textureFilePath);
 	}
 

@@ -17,7 +17,7 @@ namespace RedWood
 
 		static ResourceManager& getInstance();
 
-		Texture* getTexture(const std::string& textureFilePath);
+		Texture* getTexture(const std::string& textureFilePath, TextureType type);
 		void unloadTexture(const std::string& textureFilePath);
 		void unloadTexture(const Texture& texture);
 		static ResourceManager* instance;

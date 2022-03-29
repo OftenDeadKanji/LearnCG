@@ -42,7 +42,7 @@ namespace RedWood
 
 	void Camera::moveToLocalUp(float distance)
 	{
-		const auto up =  glm::vec3(0.0f, 1.0f, 0.0f) * this->orientation;
+		const auto up =  glm::vec3(0.0f, -1.0f, 0.0f) * this->orientation;
 		this->position += distance * up;
 	}
 

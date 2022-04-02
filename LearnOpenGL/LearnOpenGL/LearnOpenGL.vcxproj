@@ -94,6 +94,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\Rendering\Light\lightSource.cpp" />
+    <ClCompile Include="src\Rendering\Light\pointLight.cpp" />
     <ClCompile Include="src\Rendering\Light\directionalLight.cpp" />
     <ClCompile Include="src\ResourceManager\resourceManager.cpp" />
     <ClCompile Include="src\Mesh\mesh.cpp" />
@@ -128,6 +130,9 @@
     <ClCompile Include="src\Mesh\submesh.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Rendering\Light\attenuation.h" />
+    <ClInclude Include="src\Rendering\Light\lightSource.h" />
+    <ClInclude Include="src\Rendering\Light\pointLight.h" />
     <ClInclude Include="src\Rendering\Light\directionalLight.h" />
     <ClInclude Include="src\Rendering\Texture\textureType.h" />
     <ClInclude Include="src\ResourceManager\resourceManager.h" />

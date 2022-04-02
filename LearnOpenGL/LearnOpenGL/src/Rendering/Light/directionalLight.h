@@ -1,18 +1,19 @@
 #ifndef DIRECTIONALLIGHT_H
 #define DIRECTIONALLIGHT_H
+#include "lightSource.h"
 
 namespace RedWood
 {
-	class DirectionalLight
+	class DirectionalLight : public LightSource
 	{
 	public:
-		explicit DirectionalLight(vec3 direction, vec3 color = {0.95f, 0.95f, 0.95f});
+		DirectionalLight(vec3 color, vec3 direction);
+
+		void setLightInShader(const Shader& shader, const std::string& prefix) const override;
 
 		vec3 getDirection() const;
-		vec3 getColor() const;
 	private:
 		vec3 direction;
-		vec3 color;
 	};
 }
 #endif // DIRECTIONALLIGHT_H

@@ -4,6 +4,7 @@
 #include "../../Rendering/Shader/shader.h"
 #include "../../Rendering/Camera/camera.h"
 #include "../../Rendering/Light/directionalLight.h"
+#include "../../Rendering/Light/pointLight.h"
 
 #include "../../Mesh/mesh.h"
 
@@ -27,6 +28,7 @@ namespace RedWood::MVC
 
 		Camera camera;
 		DirectionalLight dirLight;
+		PointLight pointLight;
 
 		vec2 mousePrevPos {};
 

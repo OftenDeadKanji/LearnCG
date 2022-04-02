@@ -8,7 +8,8 @@ namespace RedWood::MVC
 		: controller(controller),
 		window(WindowProperties({ 1600, 900 }, WindowMode::Windowed, "LearnOpenGL", "")),
 		camera({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f }),
-		dirLight({-1.0f, -1.0f, -1.0f}),
+		dirLight({ 1.0f, 1.0f, 1.0f }, { -1.0f, -1.0f, -1.0f }),
+		pointLight({1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {10.0f}),
 		backpack("Resources/Models/backpack/backpack.obj")
 	{
 		this->window.attachEventManager(this->eventManager);
@@ -100,8 +101,12 @@ namespace RedWood::MVC
 		meshShader.setMat4("model", glm::mat4(1.0f));
 
 		meshShader.setInt("directionalLightCount", 1);
-		meshShader.setVec3f("directionalLights[0].direction", dirLight.getDirection());
-		meshShader.setVec3f("directionalLights[0].color", dirLight.getColor());
+		dirLight.setLightInShader(meshShader, "directionalLights[0].");
+		//meshShader.setVec3f("directionalLights[0].direction", dirLight.getDirection());
+		//meshShader.setVec3f("directionalLights[0].color", {1.0f,1.0f,1.0f});
+
+		meshShader.setInt("pointLightCount", 1);
+		pointLight.setLightInShader(meshShader, "pointLights[0].");
 
 		backpack.render(meshShader);
 

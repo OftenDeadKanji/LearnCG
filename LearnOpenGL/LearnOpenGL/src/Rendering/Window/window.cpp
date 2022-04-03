@@ -32,10 +32,16 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
-	auto* userWindow = reinterpret_cast<RW::Window*>(glfwGetWindowUserPointer(window));
-	if(userWindow)
+	ImGuiIO& io = ImGui::GetIO();
+	io.AddMouseButtonEvent(button, action);
+
+	if (!io.WantCaptureMouse)
 	{
-		userWindow->mouseButtonCallback(RW::EventSystem::convertToMouseButton(button), RW::EventSystem::convertToMouseButtonAction(action));
+		auto* userWindow = reinterpret_cast<RW::Window*>(glfwGetWindowUserPointer(window));
+		if (userWindow)
+		{
+			userWindow->mouseButtonCallback(RW::EventSystem::convertToMouseButton(button), RW::EventSystem::convertToMouseButtonAction(action));
+		}
 	}
 }
 
@@ -57,6 +63,7 @@ namespace RedWood
 	{
 		this->createGLFWWindow();
 		this->initializeOpenGL();
+		this->initImGUI();
 
 		glfwSetInputMode(this->glfwWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 		glfwSetCursorPos(this->glfwWindow, this->properties.Size.x / 2.0, this->properties.Size.y / 2.0);
@@ -70,6 +77,10 @@ namespace RedWood
 
 	Window::~Window()
 	{
+		ImGui_ImplOpenGL3_Shutdown();
+		ImGui_ImplGlfw_Shutdown();
+		ImGui::DestroyContext();
+
 		if(this->glfwWindow)
 		{
 			glfwDestroyWindow(this->glfwWindow);
@@ -124,16 +135,28 @@ namespace RedWood
 		constexpr float normalizeFactor = colorNormalizeFactor();
 		glClearColor(color.r * normalizeFactor, color.g * normalizeFactor, color.b * normalizeFactor, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
 	}
 
 	void Window::fillWithColorRGBf(const vec3& color)
 	{
 		glClearColor(color.r, color.g, color.b, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
 	}
 
 	void Window::swapBuffers()
 	{
+		//ImGui::EndFrame();
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		
 		glfwSwapBuffers(this->glfwWindow);
 	}
 
@@ -178,6 +201,11 @@ namespace RedWood
 	void Window::resetCursorPos()
 	{
 		glfwSetCursorPos(this->glfwWindow, this->properties.Size.x / 2.0, this->properties.Size.y / 2.0);
+	}
+
+	GLFWwindow* Window::getGLFWWindow() const
+	{
+		return this->glfwWindow;
 	}
 
 	void Window::createGLFWWindow()
@@ -275,5 +303,19 @@ namespace RedWood
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		glFrontFace(GL_CCW);
+	}
+
+	void Window::initImGUI()
+	{
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+		auto io = ImGui::GetIO(); (void)io;
+
+		io.WantCaptureMouse = true;
+		io.WantCaptureMouseUnlessPopupClose = true;
+
+		ImGui::StyleColorsDark();
+		ImGui_ImplGlfw_InitForOpenGL(this->glfwWindow, false);
+		ImGui_ImplOpenGL3_Init("#version 430");
 	}
 }

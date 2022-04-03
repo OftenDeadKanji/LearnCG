@@ -30,6 +30,7 @@ namespace RedWood::MVC
 
 	void View::checkInput(const float deltaTime)
 	{
+#if 1
 		eventManager.checkForEvents();
 		while(!eventManager.isEventQueueEmpty())
 		{
@@ -47,6 +48,8 @@ namespace RedWood::MVC
 				case EventSystem::EventType::KeyboardKeyReleased:
 					break;
 				case EventSystem::EventType::MouseButtonPressed:
+					if(EventSystem::Mouse::buttons[static_cast<int>(EventSystem::MouseButton::Right)])
+					this->mousePrevPos = EventSystem::Mouse::position;
 					break;
 				case EventSystem::EventType::MouseButtonReleased:
 					break;
@@ -80,19 +83,30 @@ namespace RedWood::MVC
 			camera.moveToLocalUp(7 * deltaTime);
 		}
 
-		const float yaw = EventSystem::Mouse::position.x - this->window.getSize().x / 2.0f;
-		const float pitch = EventSystem::Mouse::position.y - this->window.getSize().y / 2.0f;
+		//const float yaw = EventSystem::Mouse::position.x - this->window.getSize().x / 2.0f;
+		//const float pitch = EventSystem::Mouse::position.y - this->window.getSize().y / 2.0f;
+		if (EventSystem::Mouse::buttons[static_cast<int>(EventSystem::MouseButton::Right)])
+		{
+			const float yaw = EventSystem::Mouse::position.x - this->mousePrevPos.x;
+			const float pitch = EventSystem::Mouse::position.y - this->mousePrevPos.y;
 
-		const vec3 cameraRotation(pitch, yaw, 0.0f);
-		this->camera.rotateCamera(cameraRotation * 30.0f * deltaTime);
+			const vec3 cameraRotation(pitch, yaw, 0.0f);
+			this->camera.rotateCamera(cameraRotation * this->mouseSpeed * deltaTime);
 
-		this->mousePrevPos = EventSystem::Mouse::position;
-		this->window.resetCursorPos();
+			this->mousePrevPos = EventSystem::Mouse::position;
+		}
+		//this->mousePrevPos = EventSystem::Mouse::position;
+		//this->window.resetCursorPos();
+#endif
 	}
 
 	void View::render(float deltaTime)
 	{
 		window.fillWithColorRGB({ 0, 0, 0 });
+
+		checkImGUI();
+
+		ImGui::ShowDemoWindow((bool*)true);
 
 		meshShader.use();
 
@@ -102,8 +116,6 @@ namespace RedWood::MVC
 
 		meshShader.setInt("directionalLightCount", 1);
 		dirLight.setLightInShader(meshShader, "directionalLights[0].");
-		//meshShader.setVec3f("directionalLights[0].direction", dirLight.getDirection());
-		//meshShader.setVec3f("directionalLights[0].color", {1.0f,1.0f,1.0f});
 
 		meshShader.setInt("pointLightCount", 1);
 		pointLight.setLightInShader(meshShader, "pointLights[0].");
@@ -111,5 +123,10 @@ namespace RedWood::MVC
 		backpack.render(meshShader);
 
 		window.swapBuffers();
+	}
+
+	void View::checkImGUI()
+	{
+		
 	}
 }

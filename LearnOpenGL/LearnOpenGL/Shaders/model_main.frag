@@ -64,7 +64,7 @@ void main()
 	int ptLightCount = min(pointLightCount, POINT_LIGHT_MAX_COUNT);
 	for(int i = 0; i < ptLightCount; ++i)
 	{
-		color = calculatePointLight(pointLights[i], normal, FragPos, color);
+		//color = calculatePointLight(pointLights[i], normal, FragPos, color);
 	}
 
 	FragColor = vec4(color, 1.0);

@@ -38,6 +38,8 @@ namespace RedWood
 		void cursorPositionCallback(vec2 position) const;
 
 		void resetCursorPos();
+
+		GLFWwindow* getGLFWWindow() const;
 	private:
 		void createGLFWWindow();
 
@@ -48,6 +50,7 @@ namespace RedWood
 		void centerWindow() const;
 
 		void initializeOpenGL();
+		void initImGUI();
 
 		WindowProperties properties;
 		GLFWwindow* glfwWindow {};

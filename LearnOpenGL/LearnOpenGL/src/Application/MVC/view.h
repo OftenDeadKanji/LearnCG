@@ -20,6 +20,7 @@ namespace RedWood::MVC
 		void checkInput(float deltaTime);
 		void render(float deltaTime);
 
+		void checkImGUI();
 	private:
 		Controller& controller;
 
@@ -30,7 +31,9 @@ namespace RedWood::MVC
 		DirectionalLight dirLight;
 		PointLight pointLight;
 
+		bool firstFrameAfterClick = true;
 		vec2 mousePrevPos {};
+		float mouseSpeed = 50.0f;
 
 		Shader meshShader;
 		Mesh backpack;

@@ -12,6 +12,7 @@ namespace RedWood
 		void setLightInShader(const Shader& shader, const std::string& prefix) const override;
 
 		vec3 getDirection() const;
+		void setDirection(const vec3& dir);
 	private:
 		vec3 direction;
 	};

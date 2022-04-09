@@ -6,9 +6,12 @@ layout(location = 2) in vec3 in_normal;
 layout(location = 3) in vec3 in_tangent;
 layout(location = 4) in vec3 in_bitangent;
 
-out vec3 FragPos;
-out vec2 TexCoords;
-out mat3 TBN;
+out VS_OUT
+{
+	vec3 fragmentPosition;
+	vec2 textureCoordinate;
+	mat3 TBN;
+} vs_out;
 
 uniform mat4 model;
 uniform mat4 view;
@@ -18,12 +21,12 @@ void main()
 {
 	gl_Position = proj * view * vec4(in_pos, 1.0f);
 
-	FragPos = vec3(in_pos);
-	TexCoords = in_texCoord;
+	vs_out.fragmentPosition = vec3(in_pos);
+	vs_out.textureCoordinate = in_texCoord;
 
 	vec3 T = normalize(vec3(model * vec4(in_tangent, 0.0)));
 	vec3 B = normalize(vec3(model * vec4(in_bitangent, 0.0)));
 	vec3 N = normalize(vec3(model * vec4(in_normal, 0.0)));
 
-	TBN = mat3(T, B, N);
+	vs_out.TBN = mat3(T, B, N);
 }

@@ -28,10 +28,13 @@ namespace RedWood::MVC
 		EventSystem::EventManager eventManager;
 
 		Camera camera;
-		DirectionalLight dirLight;
-		PointLight pointLight;
 
-		bool firstFrameAfterClick = true;
+		DirectionalLight dirLight;
+		vec3 dirLightDirection{};
+		vec3 dirLightColor{};
+
+		std::vector<PointLight> pointLights;
+
 		vec2 mousePrevPos {};
 		float mouseSpeed = 50.0f;
 

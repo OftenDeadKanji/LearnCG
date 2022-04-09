@@ -18,4 +18,27 @@ namespace RedWood
 		shader.setFloat(prefix + "attenuation.linear", this->attenuation.linear);
 		shader.setFloat(prefix + "attenuation.quadratic", this->attenuation.quadratic);
 	}
+
+	vec3 PointLight::getPosition() const
+	{
+		return this->position;
+	}
+
+	void PointLight::setPosition(const vec3& pos)
+	{
+		this->position = pos;
+	}
+
+	float PointLight::getStrength() const
+	{
+		return this->strength;
+	}
+
+	void PointLight::setStrength(float strength)
+	{
+		this->strength = strength;
+
+		this->attenuation.linear = 4.5452f * powf(strength, -1.004f);
+		this->attenuation.quadratic = 82.445f * powf(strength, -2.019f);
+	}
 }

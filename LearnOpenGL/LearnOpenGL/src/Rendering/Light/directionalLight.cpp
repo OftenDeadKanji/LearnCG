@@ -17,4 +17,9 @@ namespace RedWood
 	{
 		return this->direction;
 	}
+
+	void DirectionalLight::setDirection(const vec3& dir)
+	{
+		this->direction = dir;
+	}
 }

@@ -11,6 +11,7 @@
 #include <queue>
 #include <unordered_map>
 #include <chrono>
+#include <format>
 
 // C++ boost
 #include <boost/filesystem.hpp>

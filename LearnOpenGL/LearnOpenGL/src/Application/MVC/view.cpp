@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "view.h"
 #include "controller.h"
+#include <format>
 
 namespace RedWood::MVC
 {
@@ -8,8 +9,9 @@ namespace RedWood::MVC
 		: controller(controller),
 		window(WindowProperties({ 1600, 900 }, WindowMode::Windowed, "LearnOpenGL", "")),
 		camera({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f }),
-		dirLight({ 1.0f, 1.0f, 1.0f }, { -1.0f, -1.0f, -1.0f }),
-		pointLight({1.0f, 1.0f, 1.0f}, {0.0f, 0.0f, 1.0f}, {10.0f}),
+		dirLight({ 1.0f, 1.0f, 1.0f }, { 0.5f, -1.0f, -1.0f }),
+		dirLightDirection({ 0.5f, -1.0f, -1.0f }),
+		dirLightColor({ 1.0f, 1.0f, 1.0f }),
 		backpack("Resources/Models/backpack/backpack.obj")
 	{
 		this->window.attachEventManager(this->eventManager);
@@ -26,11 +28,12 @@ namespace RedWood::MVC
 		{
 			std::cout << "Linking mesh shader failed.\n";
 		}
+
+
 	}
 
 	void View::checkInput(const float deltaTime)
 	{
-#if 1
 		eventManager.checkForEvents();
 		while(!eventManager.isEventQueueEmpty())
 		{
@@ -49,7 +52,9 @@ namespace RedWood::MVC
 					break;
 				case EventSystem::EventType::MouseButtonPressed:
 					if(EventSystem::Mouse::buttons[static_cast<int>(EventSystem::MouseButton::Right)])
-					this->mousePrevPos = EventSystem::Mouse::position;
+					{
+						this->mousePrevPos = EventSystem::Mouse::position;
+					}
 					break;
 				case EventSystem::EventType::MouseButtonReleased:
 					break;
@@ -83,8 +88,6 @@ namespace RedWood::MVC
 			camera.moveToLocalUp(7 * deltaTime);
 		}
 
-		//const float yaw = EventSystem::Mouse::position.x - this->window.getSize().x / 2.0f;
-		//const float pitch = EventSystem::Mouse::position.y - this->window.getSize().y / 2.0f;
 		if (EventSystem::Mouse::buttons[static_cast<int>(EventSystem::MouseButton::Right)])
 		{
 			const float yaw = EventSystem::Mouse::position.x - this->mousePrevPos.x;
@@ -95,9 +98,6 @@ namespace RedWood::MVC
 
 			this->mousePrevPos = EventSystem::Mouse::position;
 		}
-		//this->mousePrevPos = EventSystem::Mouse::position;
-		//this->window.resetCursorPos();
-#endif
 	}
 
 	void View::render(float deltaTime)
@@ -105,8 +105,6 @@ namespace RedWood::MVC
 		window.fillWithColorRGB({ 0, 0, 0 });
 
 		checkImGUI();
-
-		ImGui::ShowDemoWindow((bool*)true);
 
 		meshShader.use();
 
@@ -117,8 +115,13 @@ namespace RedWood::MVC
 		meshShader.setInt("directionalLightCount", 1);
 		dirLight.setLightInShader(meshShader, "directionalLights[0].");
 
-		meshShader.setInt("pointLightCount", 1);
-		pointLight.setLightInShader(meshShader, "pointLights[0].");
+		meshShader.setInt("pointLightCount", this->pointLights.size());
+		for(int i = 0; i < this->pointLights.size(); ++i)
+		{
+			std::string prefix = std::format("pointLights[{}].", i);
+			
+			pointLights[i].setLightInShader(meshShader, prefix);
+		}
 
 		backpack.render(meshShader);
 
@@ -127,6 +130,55 @@ namespace RedWood::MVC
 
 	void View::checkImGUI()
 	{
-		
+		ImGui::Begin("Scene manager", (bool*)false);
+
+		ImGui::Text("Directional light");
+
+		ImGui::Text("direction");
+		ImGui::SameLine();
+		ImGui::SliderFloat3("", &this->dirLightDirection[0], -1.0f, 1.0f, "%.3f");
+		this->dirLight.setDirection(this->dirLightDirection);
+
+		ImGui::Text("color");
+		ImGui::SameLine();
+		ImGui::ColorEdit3("", &this->dirLightColor[0], ImGuiColorEditFlags_Uint8);
+		this->dirLight.setColor(this->dirLightColor);
+
+		ImGui::Text("");
+		ImGui::Text("PointLights");
+		if(ImGui::Button("Add"))
+		{
+			this->pointLights.push_back(PointLight( { 1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f}, 10.0f));
+		}
+		for (auto i = 0; i < this->pointLights.size(); ++i)
+		{
+			std::string text1 = std::format("Point light #{}", i + 1);
+			ImGui::Text(text1.c_str());
+			ImGui::SameLine();
+			if(ImGui::Button(std::string("Remove##" + text1).c_str()))
+			{
+				this->pointLights.erase(std::next(this->pointLights.begin(), i));
+				i--;
+				continue;
+			}
+
+			ImGui::Text("Position");
+			ImGui::SameLine();
+			vec3 pos = this->pointLights[i].getPosition();
+			ImGui::SliderFloat3(std::string("Position##" + text1).c_str(), &pos[0], -10.0f, 10.0f, "%.3f");
+			this->pointLights[i].setPosition(pos);
+
+			float strength = this->pointLights[i].getStrength();
+			ImGui::Text("Strength");
+			ImGui::SameLine();
+			ImGui::SliderFloat(std::string("Strength##" + text1).c_str(), &strength, 0.0f, 100.0f);
+			this->pointLights[i].setStrength(strength);
+
+			vec3 color = this->pointLights[i].getColor();
+			ImGui::ColorEdit3(std::string("Color##" + text1).c_str(), &color[0], ImGuiColorEditFlags_Uint8);
+			this->pointLights[i].setColor(color);
+		}
+
+		ImGui::End();
 	}
 }

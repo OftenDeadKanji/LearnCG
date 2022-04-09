@@ -11,14 +11,17 @@ namespace RedWood
 		LightSource(const vec3& color, const vec3& ambient, const vec3& diffuse, const vec3& specular);
 
 		virtual void setLightInShader(const Shader& shader, const std::string& prefix) const;
+
+		void setColor(const vec3& color);
+		vec3 getColor() const;
 	protected:
 		vec3 color;
 
-		static constexpr float defaultAmbientFactor = 0.05;;
+		float ambientFactor = 0.05f;
 		vec3 ambient;
-		static constexpr float defaultDiffuseFactor = 0.8f;
+		float diffuseFactor = 0.8f;
 		vec3 diffuse;
-		static constexpr float defaultSpecularFactor = 1.0f;
+		float specularFactor = 1.0f;
 		vec3 specular;
 	};
 }

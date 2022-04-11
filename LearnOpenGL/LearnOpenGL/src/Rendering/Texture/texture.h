@@ -18,6 +18,7 @@ namespace RedWood
 		Texture& operator=(Texture&&) noexcept;
 
 		static Texture createTextureFromFile(std::string filePath, TextureType type);
+		static Texture createDepthMap(const vec2& resolution);
 
 		void bind() const;
 		void unbind() const;

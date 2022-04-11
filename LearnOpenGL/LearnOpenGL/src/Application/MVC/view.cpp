@@ -102,30 +102,8 @@ namespace RedWood::MVC
 
 	void View::render(float deltaTime)
 	{
-		window.fillWithColorRGB({ 0, 0, 0 });
-
-		checkImGUI();
-
-		meshShader.use();
-
-		meshShader.setMat4("view", camera.getViewMatrix());
-		meshShader.setMat4("proj", camera.getProjectionMatrix());
-		meshShader.setMat4("model", glm::mat4(1.0f));
-
-		meshShader.setInt("directionalLightCount", 1);
-		dirLight.setLightInShader(meshShader, "directionalLights[0].");
-
-		meshShader.setInt("pointLightCount", this->pointLights.size());
-		for(int i = 0; i < this->pointLights.size(); ++i)
-		{
-			std::string prefix = std::format("pointLights[{}].", i);
-			
-			pointLights[i].setLightInShader(meshShader, prefix);
-		}
-
-		backpack.render(meshShader);
-
-		window.swapBuffers();
+		renderDepthMaps();
+		renderScene();
 	}
 
 	void View::checkImGUI()
@@ -180,5 +158,40 @@ namespace RedWood::MVC
 		}
 
 		ImGui::End();
+	}
+
+	void View::renderDepthMaps()
+	{
+		glViewport(0, 0, LightSource::shadowResolution.x, LightSource::shadowResolution.y);
+		glClear(GL_DEPTH_BUFFER_BIT);
+		glBindFramebuffer(GL_FRAMEBUFFER, dirLight.getDepthMapFramebuffer());
+	}
+
+	void View::renderScene()
+	{
+		window.fillWithColorRGB({ 0, 0, 0 });
+
+		checkImGUI();
+
+		meshShader.use();
+
+		meshShader.setMat4("view", camera.getViewMatrix());
+		meshShader.setMat4("proj", camera.getProjectionMatrix());
+		meshShader.setMat4("model", glm::mat4(1.0f));
+
+		meshShader.setInt("directionalLightCount", 1);
+		dirLight.setLightInShader(meshShader, "directionalLights[0].");
+
+		meshShader.setInt("pointLightCount", this->pointLights.size());
+		for (int i = 0; i < this->pointLights.size(); ++i)
+		{
+			std::string prefix = std::format("pointLights[{}].", i);
+
+			pointLights[i].setLightInShader(meshShader, prefix);
+		}
+
+		backpack.render(meshShader);
+
+		window.swapBuffers();
 	}
 }

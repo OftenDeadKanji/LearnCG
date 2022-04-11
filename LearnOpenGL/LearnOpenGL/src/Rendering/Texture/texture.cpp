@@ -68,6 +68,22 @@ namespace RedWood
 		return toReturn;
 	}
 
+	Texture Texture::createDepthMap(const vec2& resolution)
+	{
+		Texture toReturn{TextureType::DepthMap};
+
+		toReturn.bind();
+
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, resolution.x, resolution.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, nullptr);
+		
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		return toReturn;
+	}
+
 	void Texture::bind() const
 	{
 		glBindTexture(GL_TEXTURE_2D, id);

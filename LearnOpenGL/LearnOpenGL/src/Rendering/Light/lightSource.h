@@ -14,7 +14,15 @@ namespace RedWood
 
 		void setColor(const vec3& color);
 		vec3 getColor() const;
+
+		//void renderDepthMap();
+
+		GLuint getDepthMapFramebuffer() const;
+
+		static constexpr vec2 shadowResolution{ 1024, 1024 };
 	protected:
+		void createDepthMap();
+
 		vec3 color;
 
 		float ambientFactor = 0.05f;
@@ -23,5 +31,8 @@ namespace RedWood
 		vec3 diffuse;
 		float specularFactor = 1.0f;
 		vec3 specular;
+
+		GLuint depthMapFBO{};
+		Texture depthMap;
 	};
 }

@@ -4,15 +4,15 @@
 namespace RedWood
 {
 	LightSource::LightSource(const vec3& color)
-		: color(color), ambient(color * ambientFactor), diffuse(color * diffuseFactor), specular(color * specularFactor)
+		: color(color), ambient(color * ambientFactor), diffuse(color * diffuseFactor), specular(color * specularFactor), depthMap(Texture::createDepthMap(shadowResolution))
 	{
 	}
 	LightSource::LightSource(const vec3& color, float ambient, float diffuse, float specular)
-		: color(color), ambientFactor(ambient), ambient(color * ambient), diffuseFactor(diffuse), diffuse(color* diffuse), specularFactor(specular), specular(color* specular)
+		: color(color), ambientFactor(ambient), ambient(color * ambient), diffuseFactor(diffuse), diffuse(color* diffuse), specularFactor(specular), specular(color* specular), depthMap(Texture::createDepthMap(shadowResolution))
 	{
 	}
 	LightSource::LightSource(const vec3& color, const vec3& ambient, const vec3& diffuse, const vec3& specular)
-		: color(color), ambient(ambient), diffuse(diffuse), specular(specular)
+		: color(color), ambient(ambient), diffuse(diffuse), specular(specular), depthMap(Texture::createDepthMap(shadowResolution))
 	{
 		ambientFactor = this->ambient.r / this->color.r;
 		diffuseFactor = this->diffuse.r / this->color.r;
@@ -38,5 +38,19 @@ namespace RedWood
 	vec3 LightSource::getColor() const
 	{
 		return this->color;
+	}
+
+	GLuint LightSource::getDepthMapFramebuffer() const
+	{
+		return this->depthMapFBO;
+	}
+
+	void LightSource::createDepthMap()
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, this->depthMapFBO);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, this->depthMap.id, 0);
+		glDrawBuffer(GL_NONE);
+		glReadBuffer(GL_NONE);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 }

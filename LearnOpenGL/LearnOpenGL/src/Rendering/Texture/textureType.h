@@ -7,7 +7,9 @@ namespace RedWood
 	{
 		Diffuse,
 		Specular,
-		Normal
+		Normal,
+
+		DepthMap
 	};
 
 	constexpr std::string TextureTypeToString(TextureType type)

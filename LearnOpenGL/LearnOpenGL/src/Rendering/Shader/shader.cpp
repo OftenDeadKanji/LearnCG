@@ -73,6 +73,12 @@ namespace RedWood
 		glUniform1f(location, value);
 	}
 
+	void Shader::setBool(const std::string& name, bool value) const
+	{
+		const GLint location = this->getUniformLocation(name);
+		glUniform1i(location, value);
+	}
+
 	void Shader::setVec2f(const std::string& name, const glm::vec2& vector) const
 	{
 		const GLint location = this->getUniformLocation(name);

@@ -4,6 +4,8 @@ out vec4 FragColor;
 
 in VS_OUT
 {
+	vec3 color;
+	vec3 normal;
 	vec3 fragmentPosition;
 	vec2 textureCoordinate;
 	mat3 TBN;
@@ -54,16 +56,46 @@ uniform DirectionalLight directionalLights[DIRECTIONAL_LIGHT_MAX_COUNT];
 uniform int pointLightCount;
 uniform PointLight pointLights[POINT_LIGHT_MAX_COUNT];
 
-vec3 calculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir);
-vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+uniform bool withDiffuseTexture;
+uniform bool withSpecularTexture;
+uniform bool withNormalTexture;
+
+vec3 calculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec3 diffuseSampled, vec3 specularSampled);
+vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 diffuseSampled, vec3 specularSampled);
 
 vec3 gammeCorrection(vec3 fragmentColor, float gamma);
 
 void main()
 {
-	vec3 normal = texture(material.Normal, fs_in.textureCoordinate).rgb;
-	normal = normalize(normal * 2.0 - 1.0);
-	normal = normalize(fs_in.TBN * normal);
+	vec3 diffuseColor, specularColor, normal;
+	if(withDiffuseTexture)
+	{
+		diffuseColor = vec3(texture(material.Diffuse, fs_in.textureCoordinate));
+	}
+	else
+	{
+		diffuseColor = fs_in.color;
+	}
+
+	if(withSpecularTexture)
+	{
+		specularColor = vec3(texture(material.Specular, fs_in.textureCoordinate));
+	}
+	else
+	{
+		specularColor = fs_in.color;
+	}
+
+	if (withNormalTexture)
+	{
+		normal = texture(material.Normal, fs_in.textureCoordinate).rgb;
+		normal = normalize(normal * 2.0 - 1.0);
+		normal = normalize(fs_in.TBN * normal);
+	}
+	else
+	{
+		normal = fs_in.normal;
+	}
 
 	vec3 viewDir = normalize(cameraPos - fs_in.fragmentPosition);
 
@@ -72,13 +104,13 @@ void main()
 	int dirLightCount = min(directionalLightCount, DIRECTIONAL_LIGHT_MAX_COUNT);
 	for(int i = 0; i < dirLightCount; ++i)
 	{
-		result += calculateDirectionalLight(directionalLights[i], normal, viewDir);
+		result += calculateDirectionalLight(directionalLights[i], normal, viewDir, diffuseColor, specularColor);
 	}
 
 	int ptLightCount = min(pointLightCount, POINT_LIGHT_MAX_COUNT);
 	for(int i = 0; i < ptLightCount; ++i)
 	{
-		result += calculatePointLight(pointLights[i], normal, fs_in.fragmentPosition, viewDir);
+		result += calculatePointLight(pointLights[i], normal, fs_in.fragmentPosition, viewDir, diffuseColor, specularColor);
 	}
 
 	float gamma = 2.2;
@@ -87,38 +119,38 @@ void main()
 	FragColor = vec4(result, 1.0);
 }
 
-vec3 calculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir)
+vec3 calculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec3 diffuseSampled, vec3 specularSampled)
 {
 	vec3 lightDir = normalize(-light.direction);
 
-	vec3 ambient = light.light.ambient * vec3(texture(material.Diffuse, fs_in.textureCoordinate));
+	vec3 ambient = light.light.ambient * diffuseSampled;
 
 	float diff = max(dot(normal, lightDir), 0.0f);
-	vec3 diffuse = light.light.diffuse * diff * vec3(texture(material.Diffuse, fs_in.textureCoordinate));
+	vec3 diffuse = light.light.diffuse * diff * diffuseSampled;
 
 	vec3 reflectDir = reflect(-lightDir, normal);
 	vec3 halfway = normalize(lightDir + viewDir);
 	float spec = pow(max(dot(normal, halfway), 0.0f), 32);
-	vec3 specular = light.light.specular * spec * vec3(texture(material.Specular, fs_in.textureCoordinate));
+	vec3 specular = light.light.specular * spec * specularSampled;
 
 	return ambient + diffuse + specular;
 }
 
-vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 diffuseSampled, vec3 specularSampled)
 {
 	vec3 lightDir = normalize(light.position - fragPos);
 
 	float dist = length(light.position - fs_in.fragmentPosition);
 	float attenuation = 1.0 / (light.attenuation.constant + light.attenuation.linear * dist + light.attenuation.quadratic * (dist * dist));
 
-	vec3 ambient = light.light.ambient * vec3(texture(material.Diffuse, fs_in.textureCoordinate));
+	vec3 ambient = light.light.ambient * diffuseSampled;
 
 	float diff = max(dot(normal, lightDir), 0.0f);
-	vec3 diffuse = light.light.diffuse * diff * vec3(texture(material.Diffuse, fs_in.textureCoordinate));
+	vec3 diffuse = light.light.diffuse * diff * diffuseSampled;
 
 	vec3 reflectDir = reflect(-lightDir, normal);
 	float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 16);
-	vec3 specular = light.light.specular * spec * vec3(texture(material.Specular, fs_in.textureCoordinate));
+	vec3 specular = light.light.specular * spec * specularSampled;
 
 	return (ambient + diffuse + specular) * attenuation;
 }

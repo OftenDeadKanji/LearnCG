@@ -22,6 +22,8 @@ namespace RedWood
 			return "Specular";
 		case TextureType::Normal:
 			return "Normal";
+		case TextureType::DepthMap:
+			return "DepthMap";
 		default:
 			return "None";
 		}

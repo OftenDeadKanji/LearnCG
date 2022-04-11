@@ -12,7 +12,8 @@ namespace RedWood::MVC
 		dirLight({ 1.0f, 1.0f, 1.0f }, { 0.5f, -1.0f, -1.0f }),
 		dirLightDirection({ 0.5f, -1.0f, -1.0f }),
 		dirLightColor({ 1.0f, 1.0f, 1.0f }),
-		backpack("Resources/Models/backpack/backpack.obj")
+		backpack("Resources/Models/primitives/sphere.obj")
+		//backpack("Resources/Models/backpack/backpack.obj")
 	{
 		this->window.attachEventManager(this->eventManager);
 
@@ -102,7 +103,7 @@ namespace RedWood::MVC
 
 	void View::render(float deltaTime)
 	{
-		renderDepthMaps();
+		//renderDepthMaps();
 		renderScene();
 	}
 

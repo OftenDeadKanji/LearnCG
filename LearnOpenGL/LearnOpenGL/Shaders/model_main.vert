@@ -1,13 +1,16 @@
 #version 430
 
 layout(location = 0) in vec3 in_pos;
-layout(location = 1) in vec2 in_texCoord;
-layout(location = 2) in vec3 in_normal;
-layout(location = 3) in vec3 in_tangent;
-layout(location = 4) in vec3 in_bitangent;
+layout(location = 1) in vec3 in_color;
+layout(location = 2) in vec2 in_texCoord;
+layout(location = 3) in vec3 in_normal;
+layout(location = 4) in vec3 in_tangent;
+layout(location = 5) in vec3 in_bitangent;
 
 out VS_OUT
 {
+	vec3 color;
+	vec3 normal;
 	vec3 fragmentPosition;
 	vec2 textureCoordinate;
 	mat3 TBN;
@@ -21,6 +24,8 @@ void main()
 {
 	gl_Position = proj * view * vec4(in_pos, 1.0f);
 
+	vs_out.color = in_color;
+	vs_out.normal = in_normal;
 	vs_out.fragmentPosition = vec3(in_pos);
 	vs_out.textureCoordinate = in_texCoord;
 

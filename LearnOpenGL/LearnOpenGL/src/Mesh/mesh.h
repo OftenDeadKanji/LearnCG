@@ -17,5 +17,9 @@ namespace RedWood
 
 		std::vector<SubMesh> subMeshes;
 		std::string directory;
+
+		bool withDiffuseTexture{};
+		bool withSpecularTexture{};
+		bool withNormalTexture{};
 	};
 }

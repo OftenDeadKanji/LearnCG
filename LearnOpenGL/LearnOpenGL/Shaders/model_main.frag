@@ -66,7 +66,7 @@ uniform bool withNormalTexture;
 vec3 calculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec3 diffuseSampled, vec3 specularSampled);
 vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 diffuseSampled, vec3 specularSampled);
 
-float shadowCalculation(vec4 fragmentPositionInLightSpace);
+float shadowCalculation(vec4 fragmentPositionInLightSpace, vec3 normal, vec3 lightDir);
 
 vec3 gammaCorrection(vec3 fragmentColor, float gamma);
 
@@ -141,7 +141,7 @@ vec3 calculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir
 	float spec = pow(max(dot(normal, halfway), 0.0f), 32);
 	vec3 specular = light.light.specular * spec * specularSampled;
 
-	float shadow = shadowCalculation(fs_in.fragmentPositionInLightSpace);
+	float shadow = shadowCalculation(fs_in.fragmentPositionInLightSpace, normal, lightDir);
 
 	return ambient + (1.0 - shadow) * (diffuse + specular);
 }
@@ -165,14 +165,21 @@ vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 	return (ambient + diffuse + specular) * attenuation;
 }
 
-float shadowCalculation(vec4 fragmentPositionInLightSpace)
+float shadowCalculation(vec4 fragmentPositionInLightSpace, vec3 normal, vec3 lightDir)
 {
 	vec3 projectionCoords = fragmentPositionInLightSpace.xyz / fragmentPositionInLightSpace.w;
 	projectionCoords = projectionCoords * 0.5 + 0.5;
 	
 	float closestDepth = texture(shadowMap, projectionCoords.xy).r;
 	float currentDepth = projectionCoords.z;
-	float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+
+	float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
+	float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+
+	if(projectionCoords.z > 1.0)
+	{
+		shadow = 0.0;
+	}
 
 	return shadow;
 }

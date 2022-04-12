@@ -12,8 +12,8 @@ namespace RedWood::MVC
 		dirLight({ 1.0f, 1.0f, 1.0f }, { 0.5f, -1.0f, -1.0f }),
 		dirLightDirection({ 0.5f, -1.0f, -1.0f }),
 		dirLightColor({ 1.0f, 1.0f, 1.0f }),
-		backpack("Resources/Models/primitives/sphere.obj")
-		//backpack("Resources/Models/backpack/backpack.obj")
+		//backpack("Resources/Models/primitives/sphere.obj")
+		backpack("Resources/Models/backpack/backpack.obj")
 		,floor("Resources/Models/primitives/plane.obj")
 	{
 		this->window.attachEventManager(this->eventManager);
@@ -114,9 +114,11 @@ namespace RedWood::MVC
 	void View::render(float deltaTime)
 	{
 		glViewport(0, 0, LightSource::shadowResolution.x, LightSource::shadowResolution.y);
+		glCullFace(GL_FRONT);
 		renderDepthMaps();
 
 		glViewport(0, 0, this->window.getSize().x, this->window.getSize().y);
+		glCullFace(GL_BACK);
 		renderScene();
 	}
 
@@ -176,6 +178,7 @@ namespace RedWood::MVC
 
 	void View::renderDepthMaps()
 	{
+
 		glBindFramebuffer(GL_FRAMEBUFFER, dirLight.getDepthMapFramebuffer());
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -187,7 +190,7 @@ namespace RedWood::MVC
 			vec3(0.0f, 1.0f, 0.0f)
 		);
 		float nearPlane = 1.0f, farPlane = 7.5f;
-		mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
+		mat4 lightProjection = glm::ortho(-10.0f, 10.0f, 10.0f, -10.0f, nearPlane, farPlane);
 		mat4 lightSpaceMatrix = lightProjection * lightView;
 
 		depthMapShader.use();
@@ -218,7 +221,7 @@ namespace RedWood::MVC
 			vec3(0.0f, 1.0f, 0.0f)
 		);
 		float nearPlane = 1.0f, farPlane = 7.5f;
-		mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
+		mat4 lightProjection = glm::ortho(-10.0f, 10.0f, 10.0f, -10.0f, nearPlane, farPlane);
 		mat4 lightSpaceMatrix = lightProjection * lightView;
 
 		meshShader.use();

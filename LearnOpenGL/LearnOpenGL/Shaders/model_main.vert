@@ -28,8 +28,8 @@ void main()
 	gl_Position = proj * view * model * vec4(in_pos, 1.0);
 
 	vs_out.color = in_color;
-	vs_out.normal = in_normal;
-	vs_out.fragmentPosition = vec3(in_pos);
+	vs_out.normal = transpose(inverse(mat3(model))) * in_normal;
+	vs_out.fragmentPosition = vec3(model * vec4(in_pos, 1.0));
 	vs_out.textureCoordinate = in_texCoord;
 
 	vec3 T = normalize(vec3(model * vec4(in_tangent, 0.0)));

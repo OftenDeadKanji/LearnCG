@@ -88,10 +88,10 @@ namespace RedWood
 	{
 		for(unsigned int i = 0; i < this->textures.size(); ++i)
 		{
-			glActiveTexture(GL_TEXTURE0 + i);
+			glActiveTexture(GL_TEXTURE1 + i);
 
 			TextureType type = this->textures[i]->type;
-			shader.setInt("material." + TextureTypeToString(type), i);
+			shader.setInt("material." + TextureTypeToString(type), 1 + i);
 			this->textures[i]->bind();
 		}
 

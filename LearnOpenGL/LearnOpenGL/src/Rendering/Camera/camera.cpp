@@ -24,6 +24,11 @@ namespace RedWood
 		return glm::perspective(glm::radians(45.0f), 1600.0f / 900.0f, 0.1f, 100.0f);
 	}
 
+	glm::vec3 Camera::getPosition() const
+	{
+		return this->position;
+	}
+
 	void Camera::move(float distance, const glm::vec3& direction)
 	{
 		this->position += distance * glm::normalize(direction);

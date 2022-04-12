@@ -10,6 +10,8 @@ namespace RedWood
 		glm::mat4 getViewMatrix() const;
 		glm::mat4 getProjectionMatrix() const;
 
+		glm::vec3 getPosition() const;
+
 		void move(float distance, const glm::vec3& direction);
 		void move(const glm::vec3& newPosition);
 

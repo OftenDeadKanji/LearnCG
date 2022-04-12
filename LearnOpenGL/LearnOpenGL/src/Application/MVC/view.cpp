@@ -14,7 +14,7 @@ namespace RedWood::MVC
 		dirLightColor({ 1.0f, 1.0f, 1.0f }),
 		//backpack("Resources/Models/primitives/sphere.obj")
 		backpack("Resources/Models/backpack/backpack.obj")
-		,floor("Resources/Models/primitives/plane.obj")
+		, floor("Resources/Models/primitives/plane.obj")
 	{
 		this->window.attachEventManager(this->eventManager);
 
@@ -189,8 +189,8 @@ namespace RedWood::MVC
 			vec3(0.0f, 0.0f, 0.0f),
 			vec3(0.0f, 1.0f, 0.0f)
 		);
-		float nearPlane = 1.0f, farPlane = 7.5f;
-		mat4 lightProjection = glm::ortho(-10.0f, 10.0f, 10.0f, -10.0f, nearPlane, farPlane);
+		float nearPlane = 1.0f, farPlane = 9.5f;
+		mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
 		mat4 lightSpaceMatrix = lightProjection * lightView;
 
 		depthMapShader.use();
@@ -202,7 +202,7 @@ namespace RedWood::MVC
 		auto tr = mat4(1.0f);
 		tr = glm::translate(tr, { 0.0f, -2.0f, 0.0f });
 		depthMapShader.setMat4("model", tr);
-		floor.render(meshShader);
+		floor.render(depthMapShader);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
@@ -220,8 +220,8 @@ namespace RedWood::MVC
 			vec3(0.0f, 0.0f, 0.0f),
 			vec3(0.0f, 1.0f, 0.0f)
 		);
-		float nearPlane = 1.0f, farPlane = 7.5f;
-		mat4 lightProjection = glm::ortho(-10.0f, 10.0f, 10.0f, -10.0f, nearPlane, farPlane);
+		constexpr float nearPlane = 1.0f, farPlane = 9.5f;
+		const mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
 		mat4 lightSpaceMatrix = lightProjection * lightView;
 
 		meshShader.use();
@@ -229,7 +229,9 @@ namespace RedWood::MVC
 		setLightUniforms(meshShader);
 
 		meshShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+		meshShader.setVec3f("lightPos", dirLightPos);
 		glActiveTexture(GL_TEXTURE0);
+		meshShader.setInt("shadowMap", 0);
 		dirLight.getDepthMap().bind();
 
 		meshShader.setMat4("model", glm::mat4(1.0f));
@@ -249,6 +251,8 @@ namespace RedWood::MVC
 	{
 		shader.setMat4("view", camera.getViewMatrix());
 		shader.setMat4("proj", camera.getProjectionMatrix());
+
+		shader.setVec3f("cameraPos", camera.getPosition());
 	}
 
 	void View::setLightUniforms(const Shader& shader) const

@@ -58,7 +58,7 @@ namespace RedWood
 		for (unsigned i = 0; i < mesh->mNumVertices; ++i)
 		{
 			vec3 position = { mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z };
-			vec3 color = mesh->mColors[0] != nullptr
+			vec3 color = mesh->mColors[0]
 				? vec3{mesh->mColors[0][i].r, mesh->mColors[0][i].g, mesh->mColors[0][i].b}
 			    : vec3{ 1.0f, 1.0f, 1.0f };
 			vec3 normal = { mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z };

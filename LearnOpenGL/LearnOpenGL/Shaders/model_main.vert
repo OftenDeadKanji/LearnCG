@@ -14,15 +14,18 @@ out VS_OUT
 	vec3 fragmentPosition;
 	vec2 textureCoordinate;
 	mat3 TBN;
+	vec4 fragmentPositionInLightSpace;
 } vs_out;
 
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 proj;
 
+uniform mat4 lightSpaceMatrix;
+
 void main()
 {
-	gl_Position = proj * view * vec4(in_pos, 1.0f);
+	gl_Position = proj * view * model * vec4(in_pos, 1.0);
 
 	vs_out.color = in_color;
 	vs_out.normal = in_normal;
@@ -34,4 +37,6 @@ void main()
 	vec3 N = normalize(vec3(model * vec4(in_normal, 0.0)));
 
 	vs_out.TBN = mat3(T, B, N);
+
+	vs_out.fragmentPositionInLightSpace = lightSpaceMatrix * vec4(vs_out.fragmentPosition, 1.0);
 }

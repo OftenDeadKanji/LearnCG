@@ -205,9 +205,9 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\main.vert" />
-    <None Include="Shaders\main.frag" />
     <None Include="Shaders\model_main.vert" />
     <None Include="Shaders\model_main.frag" />
+    <None Include="Shaders\depthMap.vert" />
+    <None Include="Shaders\depthMap.frag" />
   </ItemGroup>
 </Project>

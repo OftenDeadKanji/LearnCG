@@ -25,12 +25,17 @@ namespace RedWood::MVC
 		void renderDepthMaps();
 		void renderScene();
 
+		void setCameraUniforms(const Shader& shader) const;
+		void setLightUniforms(const Shader& shader) const;
+
 		Controller& controller;
 
 		Window window;
 		EventSystem::EventManager eventManager;
 
 		Camera camera;
+
+		Shader depthMapShader;
 
 		DirectionalLight dirLight;
 		vec3 dirLightDirection{};
@@ -43,6 +48,7 @@ namespace RedWood::MVC
 
 		Shader meshShader;
 		Mesh backpack;
+		Mesh floor;
 	};
 }
 #endif

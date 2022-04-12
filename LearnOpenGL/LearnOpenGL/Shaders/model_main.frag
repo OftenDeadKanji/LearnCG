@@ -1,6 +1,7 @@
 #version 430 
 
 out vec4 FragColor;
+uniform sampler2D shadowMap;
 
 in VS_OUT
 {
@@ -9,6 +10,7 @@ in VS_OUT
 	vec3 fragmentPosition;
 	vec2 textureCoordinate;
 	mat3 TBN;
+	vec4 fragmentPositionInLightSpace;
 } fs_in;
 
 uniform vec3 cameraPos;
@@ -60,10 +62,13 @@ uniform bool withDiffuseTexture;
 uniform bool withSpecularTexture;
 uniform bool withNormalTexture;
 
+
 vec3 calculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec3 diffuseSampled, vec3 specularSampled);
 vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 diffuseSampled, vec3 specularSampled);
 
-vec3 gammeCorrection(vec3 fragmentColor, float gamma);
+float shadowCalculation(vec4 fragmentPositionInLightSpace);
+
+vec3 gammaCorrection(vec3 fragmentColor, float gamma);
 
 void main()
 {
@@ -113,8 +118,11 @@ void main()
 		result += calculatePointLight(pointLights[i], normal, fs_in.fragmentPosition, viewDir, diffuseColor, specularColor);
 	}
 
-	float gamma = 2.2;
-	result = gammeCorrection(result, gamma);
+	if (withDiffuseTexture)
+	{
+		float gamma = 2.2;
+		result = gammaCorrection(result, gamma);
+	}
 
 	FragColor = vec4(result, 1.0);
 }
@@ -133,7 +141,9 @@ vec3 calculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir
 	float spec = pow(max(dot(normal, halfway), 0.0f), 32);
 	vec3 specular = light.light.specular * spec * specularSampled;
 
-	return ambient + diffuse + specular;
+	float shadow = shadowCalculation(fs_in.fragmentPositionInLightSpace);
+
+	return ambient + (1.0 - shadow) * (diffuse + specular);
 }
 
 vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 diffuseSampled, vec3 specularSampled)
@@ -155,7 +165,19 @@ vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 	return (ambient + diffuse + specular) * attenuation;
 }
 
-vec3 gammeCorrection(vec3 fragmentColor, float gamma)
+float shadowCalculation(vec4 fragmentPositionInLightSpace)
+{
+	vec3 projectionCoords = fragmentPositionInLightSpace.xyz / fragmentPositionInLightSpace.w;
+	projectionCoords = projectionCoords * 0.5 + 0.5;
+	
+	float closestDepth = texture(shadowMap, projectionCoords.xy).r;
+	float currentDepth = projectionCoords.z;
+	float shadow = currentDepth > closestDepth ? 1.0 : 0.0;
+
+	return shadow;
+}
+
+vec3 gammaCorrection(vec3 fragmentColor, float gamma)
 {
 	return pow(fragmentColor, vec3(1.0 / gamma));
 }

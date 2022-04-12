@@ -14,6 +14,7 @@ namespace RedWood::MVC
 		dirLightColor({ 1.0f, 1.0f, 1.0f }),
 		backpack("Resources/Models/primitives/sphere.obj")
 		//backpack("Resources/Models/backpack/backpack.obj")
+		,floor("Resources/Models/primitives/plane.obj")
 	{
 		this->window.attachEventManager(this->eventManager);
 
@@ -30,7 +31,16 @@ namespace RedWood::MVC
 			std::cout << "Linking mesh shader failed.\n";
 		}
 
+		auto depthMapVert = SubShader::createShaderFromFile("Shaders/depthMap.vert", SubShader::Type::Vertex);
+		auto depthMapFrag = SubShader::createShaderFromFile("Shaders/depthMap.frag", SubShader::Type::Fragment);
 
+		this->depthMapShader.attachSubShader(depthMapVert);
+		this->depthMapShader.attachSubShader(depthMapFrag);
+
+		if (!this->depthMapShader.tryToLinkShader())
+		{
+			std::cout << "Linking depth map shader failed.\n";
+		}
 	}
 
 	void View::checkInput(const float deltaTime)
@@ -103,7 +113,10 @@ namespace RedWood::MVC
 
 	void View::render(float deltaTime)
 	{
-		//renderDepthMaps();
+		glViewport(0, 0, LightSource::shadowResolution.x, LightSource::shadowResolution.y);
+		renderDepthMaps();
+
+		glViewport(0, 0, this->window.getSize().x, this->window.getSize().y);
 		renderScene();
 	}
 
@@ -163,9 +176,32 @@ namespace RedWood::MVC
 
 	void View::renderDepthMaps()
 	{
-		glViewport(0, 0, LightSource::shadowResolution.x, LightSource::shadowResolution.y);
-		glClear(GL_DEPTH_BUFFER_BIT);
 		glBindFramebuffer(GL_FRAMEBUFFER, dirLight.getDepthMapFramebuffer());
+		glClear(GL_DEPTH_BUFFER_BIT);
+
+		vec3 dirLightPos = -2.0f * this->dirLightDirection;
+		glm::mat4 lightView = glm::lookAt
+		(
+			dirLightPos,
+			vec3(0.0f, 0.0f, 0.0f),
+			vec3(0.0f, 1.0f, 0.0f)
+		);
+		float nearPlane = 1.0f, farPlane = 7.5f;
+		mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
+		mat4 lightSpaceMatrix = lightProjection * lightView;
+
+		depthMapShader.use();
+		depthMapShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+		
+		depthMapShader.setMat4("model", mat4(1.0f));
+		backpack.render(depthMapShader);
+
+		auto tr = mat4(1.0f);
+		tr = glm::translate(tr, { 0.0f, -2.0f, 0.0f });
+		depthMapShader.setMat4("model", tr);
+		floor.render(meshShader);
+
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
 	void View::renderScene()
@@ -174,25 +210,55 @@ namespace RedWood::MVC
 
 		checkImGUI();
 
+		vec3 dirLightPos = -2.0f * this->dirLightDirection;
+		glm::mat4 lightView = glm::lookAt
+		(
+			dirLightPos,
+			vec3(0.0f, 0.0f, 0.0f),
+			vec3(0.0f, 1.0f, 0.0f)
+		);
+		float nearPlane = 1.0f, farPlane = 7.5f;
+		mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
+		mat4 lightSpaceMatrix = lightProjection * lightView;
+
 		meshShader.use();
+		setCameraUniforms(meshShader);
+		setLightUniforms(meshShader);
 
-		meshShader.setMat4("view", camera.getViewMatrix());
-		meshShader.setMat4("proj", camera.getProjectionMatrix());
+		meshShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
+		glActiveTexture(GL_TEXTURE0);
+		dirLight.getDepthMap().bind();
+
 		meshShader.setMat4("model", glm::mat4(1.0f));
+		backpack.render(meshShader);
 
-		meshShader.setInt("directionalLightCount", 1);
-		dirLight.setLightInShader(meshShader, "directionalLights[0].");
+		glActiveTexture(GL_TEXTURE0);
+		dirLight.getDepthMap().bind();
+		auto tr = mat4(1.0f);
+		tr = glm::translate(tr, { 0.0f, -2.0f, 0.0f });
+		meshShader.setMat4("model", tr);
+		floor.render(meshShader);
 
-		meshShader.setInt("pointLightCount", this->pointLights.size());
+		window.swapBuffers();
+	}
+
+	void View::setCameraUniforms(const Shader& shader) const
+	{
+		shader.setMat4("view", camera.getViewMatrix());
+		shader.setMat4("proj", camera.getProjectionMatrix());
+	}
+
+	void View::setLightUniforms(const Shader& shader) const
+	{
+		shader.setInt("directionalLightCount", 1);
+		dirLight.setLightInShader(shader, "directionalLights[0].");
+
+		shader.setInt("pointLightCount", this->pointLights.size());
 		for (int i = 0; i < this->pointLights.size(); ++i)
 		{
 			std::string prefix = std::format("pointLights[{}].", i);
 
-			pointLights[i].setLightInShader(meshShader, prefix);
+			pointLights[i].setLightInShader(shader, prefix);
 		}
-
-		backpack.render(meshShader);
-
-		window.swapBuffers();
 	}
 }

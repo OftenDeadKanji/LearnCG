@@ -14,7 +14,6 @@ in VS_OUT
 } fs_in;
 
 uniform vec3 cameraPos;
-uniform vec3 lightPos;
 
 struct Material {
 	sampler2D Diffuse;
@@ -104,6 +103,7 @@ void main()
 	}
 
 	vec3 viewDir = normalize(cameraPos - fs_in.fragmentPosition);
+	normal = normalize(normal);
 
 	vec3 result = vec3(0.0f);
 	
@@ -137,9 +137,8 @@ vec3 calculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir
 	float diff = max(dot(normal, lightDir), 0.0f);
 	vec3 diffuse = light.light.diffuse * diff * diffuseSampled;
 
-	vec3 reflectDir = reflect(-lightDir, normal);
 	vec3 halfway = normalize(lightDir + viewDir);
-	float spec = pow(max(dot(normal, halfway), 0.0f), 32);
+	float spec = pow(max(dot(normal, halfway), 0.0f), 16.0);
 	vec3 specular = light.light.specular * spec * specularSampled;
 
 	float shadow = shadowCalculation(fs_in.fragmentPositionInLightSpace, normal, lightDir);
@@ -159,8 +158,8 @@ vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 	float diff = max(dot(normal, lightDir), 0.0f);
 	vec3 diffuse = light.light.diffuse * diff * diffuseSampled;
 
-	vec3 reflectDir = reflect(-lightDir, normal);
-	float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 16);
+	vec3 halfway = normalize(lightDir + viewDir);
+	float spec = pow(max(dot(normal, halfway), 0.0f), 16.0);
 	vec3 specular = light.light.specular * spec * specularSampled;
 
 	return (ambient + diffuse + specular) * attenuation;

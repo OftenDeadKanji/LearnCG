@@ -24,7 +24,6 @@ namespace RedWood
 	}
 	void LightSource::setLightInShader(const Shader& shader, const std::string& prefix) const
 	{
-		//shader.setVec3f(prefix + "color", this->color);
 		shader.setVec3f(prefix + "light.ambient", this->ambient);
 		shader.setVec3f(prefix + "light.diffuse", this->diffuse);
 		shader.setVec3f(prefix + "light.specular", this->specular);

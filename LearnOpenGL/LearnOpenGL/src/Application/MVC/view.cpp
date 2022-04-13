@@ -8,95 +8,75 @@ namespace RedWood::MVC
 	View::View(MVC::Controller& controller)
 		: controller(controller),
 		window(WindowProperties({ 1600, 900 }, WindowMode::Windowed, "LearnOpenGL", "")),
-		camera({ 0.0f, 0.0f, -5.0f }, { 0.0f, 0.0f, 0.0f }),
+		camera({ 0.0f, 0.0f, 5.0f }, { 0.0f, 0.0f, 0.0f }),
 		dirLight({ 1.0f, 1.0f, 1.0f }, { 0.5f, -1.0f, -1.0f }),
 		dirLightDirection({ 0.5f, -1.0f, -1.0f }),
 		dirLightColor({ 1.0f, 1.0f, 1.0f }),
 		//backpack("Resources/Models/primitives/sphere.obj")
-		backpack("Resources/Models/backpack/backpack.obj")
-		, floor("Resources/Models/primitives/plane.obj")
+		backpack("Resources/Models/backpack/backpack.obj", { 0.0f, 0.0f, 0.0f })
+		, floor("Resources/Models/primitives/plane.obj", { 0.0f, -1.8f, 0.0f })
 	{
 		this->window.attachEventManager(this->eventManager);
 
 		this->mousePrevPos = window.getSize() * 0.5f;
 
-		auto meshVert = SubShader::createShaderFromFile("Shaders/model_main.vert", SubShader::Type::Vertex);
-		auto meshFrag = SubShader::createShaderFromFile("Shaders/model_main.frag", SubShader::Type::Fragment);
-
-		this->meshShader.attachSubShader(meshVert);
-		this->meshShader.attachSubShader(meshFrag);
-
-		if (!this->meshShader.tryToLinkShader())
-		{
-			std::cout << "Linking mesh shader failed.\n";
-		}
-
-		auto depthMapVert = SubShader::createShaderFromFile("Shaders/depthMap.vert", SubShader::Type::Vertex);
-		auto depthMapFrag = SubShader::createShaderFromFile("Shaders/depthMap.frag", SubShader::Type::Fragment);
-
-		this->depthMapShader.attachSubShader(depthMapVert);
-		this->depthMapShader.attachSubShader(depthMapFrag);
-
-		if (!this->depthMapShader.tryToLinkShader())
-		{
-			std::cout << "Linking depth map shader failed.\n";
-		}
+		this->initShaders();
 	}
 
 	void View::checkInput(const float deltaTime)
 	{
 		eventManager.checkForEvents();
-		while(!eventManager.isEventQueueEmpty())
+		while (!eventManager.isEventQueueEmpty())
 		{
 			const auto eventType = this->eventManager.getEventTypeFromQueue();
-			switch(eventType)
+			switch (eventType)
 			{
-				case EventSystem::EventType::WindowResized:
-					break;
-				case EventSystem::EventType::WindowClosed:
-					this->controller.windowCloseCallback();
-					break;
-				case EventSystem::EventType::KeyboardKeyPressed:
-					this->controller.keyboardKeyPressCallback();
-					break;
-				case EventSystem::EventType::KeyboardKeyReleased:
-					break;
-				case EventSystem::EventType::MouseButtonPressed:
-					if(EventSystem::Mouse::buttons[static_cast<int>(EventSystem::MouseButton::Right)])
-					{
-						this->mousePrevPos = EventSystem::Mouse::position;
-					}
-					break;
-				case EventSystem::EventType::MouseButtonReleased:
-					break;
-				case EventSystem::EventType::MouseCursorMoved:
-					break;
+			case EventSystem::EventType::WindowResized:
+				break;
+			case EventSystem::EventType::WindowClosed:
+				this->controller.windowCloseCallback();
+				break;
+			case EventSystem::EventType::KeyboardKeyPressed:
+				this->controller.keyboardKeyPressCallback();
+				break;
+			case EventSystem::EventType::KeyboardKeyReleased:
+				break;
+			case EventSystem::EventType::MouseButtonPressed:
+				if (EventSystem::Mouse::buttons[static_cast<int>(EventSystem::MouseButton::Right)])
+				{
+					this->mousePrevPos = EventSystem::Mouse::position;
+				}
+				break;
+			case EventSystem::EventType::MouseButtonReleased:
+				break;
+			case EventSystem::EventType::MouseCursorMoved:
+				break;
 			}
 		}
 
-		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyA)])
+		if (EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyA)])
 		{
-			camera.moveToLocalRight(-7 * deltaTime);
+			camera.moveLeft(7 * deltaTime);
 		}
-		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyD)])
+		if (EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyD)])
 		{
-			camera.moveToLocalRight(7 * deltaTime);
+			camera.moveLeft(-7 * deltaTime);
 		}
-		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyS)])
+		if (EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyS)])
 		{
-			camera.moveToLocalFront(-7 * deltaTime);
+			camera.moveForward(-7 * deltaTime);
 		}
-		if(EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyW)])
+		if (EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyW)])
 		{
-			camera.moveToLocalFront(7 * deltaTime);
+			camera.moveForward(7 * deltaTime);
 		}
 		if (EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyQ)])
 		{
-			camera.moveToLocalUp(-7 * deltaTime);
+			camera.moveUp(-7 * deltaTime);
 		}
 		if (EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyE)])
 		{
-			camera.moveToLocalUp(7 * deltaTime);
+			camera.moveUp(7 * deltaTime);
 		}
 
 		if (EventSystem::Mouse::buttons[static_cast<int>(EventSystem::MouseButton::Right)])
@@ -104,8 +84,10 @@ namespace RedWood::MVC
 			const float yaw = EventSystem::Mouse::position.x - this->mousePrevPos.x;
 			const float pitch = EventSystem::Mouse::position.y - this->mousePrevPos.y;
 
-			const vec3 cameraRotation(pitch, yaw, 0.0f);
-			this->camera.rotateCamera(cameraRotation * this->mouseSpeed * deltaTime);
+			//const vec3 cameraRotation(pitch, yaw, 0.0f);
+			//this->camera.rotateCamera(cameraRotation * this->mouseSpeed * deltaTime);
+			this->camera.turn(yaw * this->mouseSpeed * deltaTime);
+			this->camera.pitch(pitch * this->mouseSpeed * deltaTime);
 
 			this->mousePrevPos = EventSystem::Mouse::position;
 		}
@@ -140,16 +122,16 @@ namespace RedWood::MVC
 
 		ImGui::Text("");
 		ImGui::Text("PointLights");
-		if(ImGui::Button("Add"))
+		if (ImGui::Button("Add"))
 		{
-			this->pointLights.push_back(PointLight( { 1.0f, 1.0f, 1.0f }, {0.0f, 1.0f, 0.0f}, 10.0f));
+			this->pointLights.push_back(PointLight({ 1.0f, 1.0f, 1.0f }, { 0.0f, 1.0f, 0.0f }, 10.0f));
 		}
 		for (auto i = 0; i < this->pointLights.size(); ++i)
 		{
 			std::string text1 = std::format("Point light #{}", i + 1);
 			ImGui::Text(text1.c_str());
 			ImGui::SameLine();
-			if(ImGui::Button(std::string("Remove##" + text1).c_str()))
+			if (ImGui::Button(std::string("Remove##" + text1).c_str()))
 			{
 				this->pointLights.erase(std::next(this->pointLights.begin(), i));
 				i--;
@@ -176,6 +158,31 @@ namespace RedWood::MVC
 		ImGui::End();
 	}
 
+	void View::initShaders()
+	{
+		auto meshVert = SubShader::createShaderFromFile("Shaders/model_main.vert", SubShader::Type::Vertex);
+		auto meshFrag = SubShader::createShaderFromFile("Shaders/model_main.frag", SubShader::Type::Fragment);
+
+		this->meshShader.attachSubShader(meshVert);
+		this->meshShader.attachSubShader(meshFrag);
+
+		if (!this->meshShader.tryToLinkShader())
+		{
+			std::cout << "Linking mesh shader failed.\n";
+		}
+
+		auto depthMapVert = SubShader::createShaderFromFile("Shaders/depthMap.vert", SubShader::Type::Vertex);
+		auto depthMapFrag = SubShader::createShaderFromFile("Shaders/depthMap.frag", SubShader::Type::Fragment);
+
+		this->depthMapShader.attachSubShader(depthMapVert);
+		this->depthMapShader.attachSubShader(depthMapFrag);
+
+		if (!this->depthMapShader.tryToLinkShader())
+		{
+			std::cout << "Linking depth map shader failed.\n";
+		}
+	}
+
 	void View::renderDepthMaps()
 	{
 
@@ -195,8 +202,8 @@ namespace RedWood::MVC
 
 		depthMapShader.use();
 		depthMapShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
-		
-		depthMapShader.setMat4("model", mat4(1.0f));
+
+
 		backpack.render(depthMapShader);
 
 		auto tr = mat4(1.0f);

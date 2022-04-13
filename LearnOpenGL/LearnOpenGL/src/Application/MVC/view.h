@@ -22,6 +22,8 @@ namespace RedWood::MVC
 
 		void checkImGUI();
 	private:
+		void initShaders();
+
 		void renderDepthMaps();
 		void renderScene();
 

@@ -20,6 +20,37 @@ namespace RedWood
 		void moveToLocalFront(float distance);
 
 		void rotateCamera(vec3 angles);
+
+		glm::vec3 getForward() const {
+			return glm::conjugate(this->orientation) * glm::vec3(0.0f, 0.0f, -1.0f);
+		}
+
+		glm::vec3 getLeft() const {
+			return glm::conjugate(this->orientation) * glm::vec3(-1.0, 0.0f, 0.0f);
+		}
+
+		glm::vec3 getUp() const {
+			return glm::conjugate(this->orientation) * glm::vec3(0.0f, 1.0f, 0.0f);
+		}
+
+		void moveForward(float movement) {
+			this->position += getForward() * movement;
+		}
+
+		void moveLeft(float movement) {
+			this->position += getLeft() * movement;
+		}
+
+		void moveUp(float movement) {
+			this->position += getUp() * movement;
+		}
+
+		void rotate(float angle, const glm::vec3& axis);
+		void rotate(const glm::quat& rotation);
+
+		void pitch(float pitchInDeg);
+		void yaw(float yawInDeg);
+		void turn(float turnRadians);
 	private:
 		vec3 position {};
 

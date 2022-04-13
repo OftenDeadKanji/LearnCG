@@ -46,7 +46,7 @@ namespace RedWood::MVC
 		std::vector<PointLight> pointLights;
 
 		vec2 mousePrevPos {};
-		float mouseSpeed = 50.0f;
+		float mouseSpeed = 75.0f;
 
 		Shader meshShader;
 		Mesh backpack;

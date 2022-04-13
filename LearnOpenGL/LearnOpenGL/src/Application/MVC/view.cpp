@@ -8,12 +8,12 @@ namespace RedWood::MVC
 	View::View(MVC::Controller& controller)
 		: controller(controller),
 		window(WindowProperties({ 1600, 900 }, WindowMode::Windowed, "LearnOpenGL", "")),
-		camera({ 0.0f, 0.0f, 5.0f }, { 0.0f, 0.0f, 0.0f }),
+		camera({ 0.0f, 0.0f, 5.0f }, { 0.5f, 0.0f, 0.0f }),
 		dirLight({ 1.0f, 1.0f, 1.0f }, { 0.5f, -1.0f, -1.0f }),
 		dirLightDirection({ 0.5f, -1.0f, -1.0f }),
-		dirLightColor({ 1.0f, 1.0f, 1.0f }),
-		//backpack("Resources/Models/primitives/sphere.obj")
-		backpack("Resources/Models/backpack/backpack.obj", { 0.0f, 0.0f, 0.0f })
+		dirLightColor({ 1.0f, 1.0f, 1.0f })
+		,backpack("Resources/Models/primitives/sphere.obj", { 0.0f, 0.0f, 0.0f })
+		//,backpack("Resources/Models/backpack/backpack.obj", { 0.0f, 0.0f, 0.0f })
 		, floor("Resources/Models/primitives/plane.obj", { 0.0f, -1.8f, 0.0f })
 	{
 		this->window.attachEventManager(this->eventManager);
@@ -56,11 +56,11 @@ namespace RedWood::MVC
 
 		if (EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyA)])
 		{
-			camera.moveLeft(7 * deltaTime);
+			camera.moveLeft(-7 * deltaTime);
 		}
 		if (EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyD)])
 		{
-			camera.moveLeft(-7 * deltaTime);
+			camera.moveLeft(7 * deltaTime);
 		}
 		if (EventSystem::Keyboard::keys[static_cast<size_t>(EventSystem::KeyboardKey::KeyS)])
 		{
@@ -86,8 +86,8 @@ namespace RedWood::MVC
 
 			//const vec3 cameraRotation(pitch, yaw, 0.0f);
 			//this->camera.rotateCamera(cameraRotation * this->mouseSpeed * deltaTime);
-			this->camera.turn(yaw * this->mouseSpeed * deltaTime);
-			this->camera.pitch(pitch * this->mouseSpeed * deltaTime);
+			this->camera.turn(-yaw * this->mouseSpeed * deltaTime);
+			this->camera.pitch(-pitch * this->mouseSpeed * deltaTime);
 
 			this->mousePrevPos = EventSystem::Mouse::position;
 		}

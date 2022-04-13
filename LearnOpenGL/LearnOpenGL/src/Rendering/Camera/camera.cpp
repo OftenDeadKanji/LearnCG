@@ -6,15 +6,18 @@ namespace RedWood
 	Camera::Camera(const vec3& position, const vec3& target)
 		: position(position)
 	{
-		this->orientation = glm::quatLookAt(target, Camera::worldUp);
+		vec3 direction = target - position;
+		if(glm::length2(direction))
+		{
+			direction = glm::normalize(direction);
+		}
+		
+		this->orientation = glm::quatLookAt(direction, Camera::worldUp);
 	}
 
 	glm::mat4 Camera::getViewMatrix() const
 	{
-		//glm::mat4 translate(1.0f);
-		//translate = glm::translate(translate, -this->position);
-
-		glm::mat4 viewMat = glm::mat4_cast(this->orientation);
+		glm::mat4 viewMat = glm::mat4_cast(glm::inverse(this->orientation));
 		viewMat = glm::translate(viewMat, -position);
 
 		return viewMat;
@@ -27,70 +30,54 @@ namespace RedWood
 
 	glm::vec3 Camera::getPosition() const
 	{
-		//std::cout << this->position.x << '\t' << this->position.y << '\t' << this->position.z << '\n';
 		return this->position;
 	}
 
-	void Camera::move(float distance, const glm::vec3& direction)
+	glm::vec3 Camera::getForward() const
 	{
-		this->position += distance * glm::normalize(direction);
+		return this->orientation * glm::vec3(0.0f, 0.0f, -1.0f) ;
 	}
 
-	void Camera::move(const glm::vec3& newPosition)
+	glm::vec3 Camera::getRight() const
 	{
-		this->position = newPosition;
+		return this->orientation * glm::vec3(1.0, 0.0f, 0.0f);
 	}
 
-	void Camera::moveToLocalRight(float distance)
+	glm::vec3 Camera::getUp() const
 	{
-		const auto right = glm::vec3(1.0f, 0.0f, 0.0f) * this->orientation;
-		this->position += distance * right;
+		return this->orientation * glm::vec3(0.0f, 1.0f, 0.0f);
 	}
 
-	void Camera::moveToLocalUp(float distance)
+	void Camera::moveForward(float movement)
 	{
-		const auto up =  glm::vec3(0.0f, 1.0f, 0.0f) * this->orientation;
-		this->position += distance * up;
+		this->position += getForward() * movement;
 	}
 
-	void Camera::moveToLocalFront(float distance)
+	void Camera::moveLeft(float movement)
 	{
-		const auto forward = glm::vec3(0.0f, 0.0f, 1.0f) * this->orientation;
-		this->position += distance * forward;
+		this->position += getRight() * movement;
 	}
 
-	void Camera::rotateCamera(vec3 anglesInDeg)
+	void Camera::moveUp(float movement)
 	{
-		const auto x = glm::angleAxis(glm::radians(anglesInDeg.x), vec3(1.0f, 0.0f, 0.0f));
-		const auto y = glm::angleAxis(glm::radians(anglesInDeg.y), vec3(0.0f, 1.0f, 0.0f));
-		
-		this->orientation = glm::normalize(x * this->orientation * y);
-	}
-
-	void Camera::rotate(float angle, const glm::vec3& axis)
-	{
-		glm::quat q = glm::angleAxis(angle, axis);
-		this->rotate(q);
-	}
-
-	void Camera::rotate(const glm::quat& rotation)
-	{
-		this->orientation = glm::normalize(rotation * this->orientation);
+		this->position += getUp() * movement;
 	}
 
 	void Camera::pitch(float pitchInDeg)
 	{
-		this->rotate(glm::radians(pitchInDeg), { 1.0f, 0.0f, 0.0f });
+		glm::quat q = glm::angleAxis(glm::radians(pitchInDeg), this->getRight());
+		this->orientation = glm::normalize(q * this->orientation);
 	}
 
 	void Camera::yaw(float yawInDeg)
 	{
-		this->rotate(glm::radians(yawInDeg), { 0.0f, 1.0f, 0.0f });
+		glm::quat q = glm::angleAxis(glm::radians(yawInDeg), this->getUp());
+		this->orientation = glm::normalize(q * this->orientation);
 	}
 
 	void Camera::turn(float turnRadians)
 	{
-		glm::quat q = glm::angleAxis(glm::radians(turnRadians), this->orientation * glm::vec3(0.0f, 1.0f, 0.0f));
-		rotate(q);
+		glm::quat q = glm::angleAxis(glm::radians(turnRadians), glm::vec3(0.0f, 1.0f, 0.0f));
+		this->orientation = glm::normalize(q * this->orientation);
 	}
 }

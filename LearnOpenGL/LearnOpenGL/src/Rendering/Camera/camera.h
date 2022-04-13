@@ -12,47 +12,19 @@ namespace RedWood
 
 		glm::vec3 getPosition() const;
 
-		void move(float distance, const glm::vec3& direction);
-		void move(const glm::vec3& newPosition);
+		glm::vec3 getForward() const;
+		glm::vec3 getRight() const;
+		glm::vec3 getUp() const;
 
-		void moveToLocalRight(float distance);
-		void moveToLocalUp(float distance);
-		void moveToLocalFront(float distance);
-
-		void rotateCamera(vec3 angles);
-
-		glm::vec3 getForward() const {
-			return glm::conjugate(this->orientation) * glm::vec3(0.0f, 0.0f, -1.0f);
-		}
-
-		glm::vec3 getLeft() const {
-			return glm::conjugate(this->orientation) * glm::vec3(-1.0, 0.0f, 0.0f);
-		}
-
-		glm::vec3 getUp() const {
-			return glm::conjugate(this->orientation) * glm::vec3(0.0f, 1.0f, 0.0f);
-		}
-
-		void moveForward(float movement) {
-			this->position += getForward() * movement;
-		}
-
-		void moveLeft(float movement) {
-			this->position += getLeft() * movement;
-		}
-
-		void moveUp(float movement) {
-			this->position += getUp() * movement;
-		}
-
-		void rotate(float angle, const glm::vec3& axis);
-		void rotate(const glm::quat& rotation);
+		void moveForward(float movement);
+		void moveLeft(float movement);
+		void moveUp(float movement);
 
 		void pitch(float pitchInDeg);
 		void yaw(float yawInDeg);
 		void turn(float turnRadians);
 	private:
-		vec3 position {};
+		vec3 position{};
 
 		static constexpr vec3 worldUp = { 0.0f, 1.0f, 0.0f };
 

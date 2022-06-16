@@ -10,7 +10,8 @@ namespace RedWood
 		Specular,
 		Normal,
 
-		DepthMap
+		DepthMap,
+		DepthCubeMap
 	};
 
 	constexpr std::string TextureTypeToString(TextureType type)
@@ -25,6 +26,8 @@ namespace RedWood
 			return "Normal";
 		case TextureType::DepthMap:
 			return "DepthMap";
+		case TextureType::DepthCubeMap:
+			return "DepthCubeMap";
 		default:
 			return "None";
 		}

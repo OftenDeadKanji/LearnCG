@@ -12,6 +12,9 @@ namespace RedWood
 		case Type::Vertex:
 			this->subShaderID = glCreateShader(GL_VERTEX_SHADER);
 			break;
+		case Type::Geometry:
+			this->subShaderID = glCreateShader(GL_GEOMETRY_SHADER);
+			break;
 		case Type::Fragment:
 			this->subShaderID = glCreateShader(GL_FRAGMENT_SHADER);
 			break;

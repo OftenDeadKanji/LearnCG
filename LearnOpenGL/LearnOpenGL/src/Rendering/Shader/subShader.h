@@ -10,6 +10,7 @@ namespace RedWood
 		enum class Type
 		{
 			Vertex,
+			Geometry,
 			Fragment
 		};
 

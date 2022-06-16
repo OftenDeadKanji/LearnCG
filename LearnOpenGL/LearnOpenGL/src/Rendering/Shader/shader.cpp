@@ -1,5 +1,7 @@
 #include "shader.h"
 #include <iostream>
+
+#include "../Texture/texture.h"
 #include "glm/gtc/type_ptr.hpp"
 
 namespace RedWood
@@ -104,6 +106,23 @@ namespace RedWood
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 	}
 
+	void Shader::setTexture(const std::string& name, const Texture& texture) const
+	{
+		const GLint location = this->getUniformLocation(name);
+		glUniform1i(location, this->textureUnit);
+		glActiveTexture(GL_TEXTURE0 + this->textureUnit);
+		if(texture.type == TextureType::DepthCubeMap)
+		{
+			glBindTexture(GL_TEXTURE_CUBE_MAP, texture.id);
+		}
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D, texture.id);
+		}
+
+		this->textureUnit++;
+	}
+
 	GLuint Shader::getShaderID() const
 	{
 		return this->shaderID;
@@ -112,6 +131,11 @@ namespace RedWood
 	void Shader::use() const
 	{
 		glUseProgram(this->shaderID);
+	}
+
+	void Shader::resetTextureUnits()
+	{
+		this->textureUnit = 0;
 	}
 
 	GLint Shader::getUniformLocation(const std::string& name) const

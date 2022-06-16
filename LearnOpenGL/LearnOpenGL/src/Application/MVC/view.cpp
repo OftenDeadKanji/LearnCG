@@ -191,11 +191,23 @@ namespace RedWood::MVC
 		{
 			std::cout << "Linking depth map shader failed.\n";
 		}
+
+		auto depthCubeMapVert = SubShader::createShaderFromFile("Resources/Shaders/depthCubeMap.vert", SubShader::Type::Vertex);
+		auto depthCubeMapGeom = SubShader::createShaderFromFile("Resources/Shaders/depthCubeMap.geom", SubShader::Type::Geometry);
+		auto depthCubeMapFrag = SubShader::createShaderFromFile("Resources/Shaders/depthCubeMap.frag", SubShader::Type::Fragment);
+
+		this->depthCubeMapShader.attachSubShader(depthCubeMapVert);
+		this->depthCubeMapShader.attachSubShader(depthCubeMapGeom);
+		this->depthCubeMapShader.attachSubShader(depthCubeMapFrag);
+
+		if (!this->depthCubeMapShader.tryToLinkShader())
+		{
+			std::cout << "Linking depth cube map shader failed.\n";
+		}
 	}
 
 	void View::renderDepthMaps()
 	{
-
 		glBindFramebuffer(GL_FRAMEBUFFER, dirLight.getDepthMapFramebuffer());
 		glClear(GL_DEPTH_BUFFER_BIT);
 
@@ -213,7 +225,6 @@ namespace RedWood::MVC
 		depthMapShader.use();
 		depthMapShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
 
-
 		backpack.render(depthMapShader);
 
 		auto tr = mat4(1.0f);
@@ -222,11 +233,47 @@ namespace RedWood::MVC
 		floor.render(depthMapShader);
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+		/*for (auto& pointLight : this->pointLights)
+		{
+			float aspect = this->window.getSize().x / this->window.getSize().y;
+			float near = 1.0f;
+			float far = 25.0f;
+			mat4 shadowProjection = glm::perspective(glm::radians(90.0f), aspect, near, far);
+
+			std::vector<mat4> shadowTransforms;
+
+			shadowTransforms.emplace_back(shadowProjection * glm::lookAt(pointLight.getPosition(), pointLight.getPosition() + vec3(1.0f, 0.0f, 0.0f), vec3(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.emplace_back(shadowProjection * glm::lookAt(pointLight.getPosition(), pointLight.getPosition() + vec3(-1.0f, 0.0f, 0.0f), vec3(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.emplace_back(shadowProjection * glm::lookAt(pointLight.getPosition(), pointLight.getPosition() + vec3(0.0f, 1.0f, 0.0f), vec3(0.0f, 0.0f, 1.0f)));
+			shadowTransforms.emplace_back(shadowProjection * glm::lookAt(pointLight.getPosition(), pointLight.getPosition() + vec3(0.0f, -1.0f, 0.0f), vec3(0.0f, 0.0f, -1.0f)));
+			shadowTransforms.emplace_back(shadowProjection * glm::lookAt(pointLight.getPosition(), pointLight.getPosition() + vec3(0.0f, 0.0f, 1.0f), vec3(0.0f, -1.0f, 0.0f)));
+			shadowTransforms.emplace_back(shadowProjection * glm::lookAt(pointLight.getPosition(), pointLight.getPosition() + vec3(0.0f, 0.0f, -1.0f), vec3(0.0f, -1.0f, 0.0f)));
+
+			glBindFramebuffer(GL_FRAMEBUFFER, pointLight.getDepthMapFramebuffer());
+			glClear(GL_DEPTH_BUFFER_BIT);
+			depthCubeMapShader.use();
+			for(auto i = 0; i < 6; ++i)
+			{
+				depthCubeMapShader.setMat4("shadowMatrices[" + std::to_string(i) + "]", shadowTransforms[i]);
+			}
+			depthCubeMapShader.setFloat("farPlane", farPlane);
+			depthCubeMapShader.setVec3f("lightPos", pointLight.getPosition());
+
+			backpack.render(depthMapShader);
+
+			auto tr = mat4(1.0f);
+			tr = glm::translate(tr, { 0.0f, -2.0f, 0.0f });
+			depthMapShader.setMat4("model", tr);
+			floor.render(depthMapShader);
+
+			glBindFramebuffer(GL_FRAMEBUFFER, 0);
+		}*/
 	}
 
 	void View::renderScene()
 	{
-		window.fillWithColorRGB({ 100, 250, 0 });
+		window.fillWithColorRGB({ 0, 0, 0 });
 
 		checkImGUI();
 
@@ -241,21 +288,36 @@ namespace RedWood::MVC
 		const mat4 lightProjection = glm::ortho(-10.0f, 10.0f, -10.0f, 10.0f, nearPlane, farPlane);
 		mat4 lightSpaceMatrix = lightProjection * lightView;
 
+		//RENDER BACKPACK
 		meshShader.use();
+		meshShader.resetTextureUnits();
+
 		setCameraUniforms(meshShader);
 		setLightUniforms(meshShader);
 
 		meshShader.setMat4("lightSpaceMatrix", lightSpaceMatrix);
 		meshShader.setVec3f("lightPos", dirLightPos);
-		glActiveTexture(GL_TEXTURE0);
-		meshShader.setInt("shadowMap", 0);
-		dirLight.getDepthMap().bind();
+		meshShader.setTexture("directionalLights[0].shadowMap", dirLight.getDepthMap());
+
+		//for(int i = 0; i < this->pointLights.size();++i)
+		//{
+		//	meshShader.setTexture("pointLights[" + std::to_string(i) + "].shadowCubeMap", pointLights[i].getDepthMap());
+		//	meshShader.setFloat("pointLights[" + std::to_string(i) + "].shadowCubeMap", 25.0f);
+		//}
 
 		meshShader.setMat4("model", glm::mat4(1.0f));
 		backpack.render(meshShader);
 
-		glActiveTexture(GL_TEXTURE0);
-		dirLight.getDepthMap().bind();
+		// RENDER FLOOR
+		meshShader.resetTextureUnits();
+		meshShader.setTexture("directionalLights[0].shadowMap", dirLight.getDepthMap());
+
+		//for (int i = 0; i < this->pointLights.size(); ++i)
+		//{
+		//	meshShader.setTexture("pointLights[" + std::to_string(i) + "].shadowCubeMap", pointLights[i].getDepthMap());
+		//	meshShader.setFloat("pointLights[" + std::to_string(i) + "].shadowCubeMap", 25.0f);
+		//}
+
 		auto tr = mat4(1.0f);
 		tr = glm::translate(tr, { 0.0f, -2.0f, 0.0f });
 		meshShader.setMat4("model", tr);

@@ -1,7 +1,7 @@
 #version 430 
 
 out vec4 FragColor;
-uniform sampler2D shadowMap;
+
 
 in VS_OUT
 {
@@ -39,6 +39,7 @@ struct DirectionalLight
 {
 	Light light;
 	vec3 direction;
+	sampler2D shadowMap;
 };
 
 struct PointLight
@@ -46,6 +47,8 @@ struct PointLight
 	Light light;
 	vec3 position;
 	Attenuation attenuation;
+	//samplerCube shadowCubeMap;
+	float farPlane;
 };
 
 uniform Material material;
@@ -54,9 +57,14 @@ uniform Material material;
 uniform int directionalLightCount;
 uniform DirectionalLight directionalLights[DIRECTIONAL_LIGHT_MAX_COUNT];
 
+//uniform sampler2D shadowMap;
+
 #define POINT_LIGHT_MAX_COUNT 16
 uniform int pointLightCount;
 uniform PointLight pointLights[POINT_LIGHT_MAX_COUNT];
+
+//uniform samplerCube shadowCubeMap[POINT_LIGHT_MAX_COUNT];
+//uniform float farPlanes[POINT_LIGHT_MAX_COUNT];
 
 uniform bool withDiffuseTexture;
 uniform bool withSpecularTexture;
@@ -66,7 +74,8 @@ uniform bool withNormalTexture;
 vec3 calculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir, vec3 diffuseSampled, vec3 specularSampled);
 vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec3 diffuseSampled, vec3 specularSampled);
 
-float shadowCalculation(vec4 fragmentPositionInLightSpace, vec3 normal, vec3 lightDir);
+float shadowCalculation(vec4 fragmentPositionInLightSpace, vec3 normal, vec3 lightDir, DirectionalLight light);
+//float shadowCubeMapCalculation(vec3 fragPos, vec3 lightPos, samplerCube depthMap, float farPlane);
 
 vec3 gammaCorrection(vec3 fragmentColor, float gamma);
 
@@ -141,7 +150,7 @@ vec3 calculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir
 	float spec = pow(max(dot(normal, halfway), 0.0f), 16.0);
 	vec3 specular = light.light.specular * spec * specularSampled;
 
-	float shadow = shadowCalculation(fs_in.fragmentPositionInLightSpace, normal, lightDir);
+	float shadow = shadowCalculation(fs_in.fragmentPositionInLightSpace, normal, lightDir, light);
 
 	return ambient + (1.0 - shadow) * (diffuse + specular);
 }
@@ -162,25 +171,27 @@ vec3 calculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 	float spec = pow(max(dot(normal, halfway), 0.0f), 16.0);
 	vec3 specular = light.light.specular * spec * specularSampled;
 
+	//float shadow = shadowCubeMapCalculation(fs_in.fragmentPosition, light.position, light.shadowCubeMap, light.farPlane);
+
 	return (ambient + diffuse + specular) * attenuation;
 }
 
-float shadowCalculation(vec4 fragmentPositionInLightSpace, vec3 normal, vec3 lightDir)
+float shadowCalculation(vec4 fragmentPositionInLightSpace, vec3 normal, vec3 lightDir, DirectionalLight light)
 {
 	vec3 projectionCoords = fragmentPositionInLightSpace.xyz / fragmentPositionInLightSpace.w;
 	projectionCoords = projectionCoords * 0.5 + 0.5;
 	
-	float closestDepth = texture(shadowMap, projectionCoords.xy).r;
+	float closestDepth = texture(light.shadowMap, projectionCoords.xy).r;
 	float currentDepth = projectionCoords.z;
 
 	float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
 	float shadow = 0.0;
-	vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+	vec2 texelSize = 1.0 / textureSize(light.shadowMap, 0);
 	for (int x = -1; x <= 1; ++x)
 	{
 		for (int y = -1; y <= 1; ++y)
 		{
-			float pcfDepth = texture(shadowMap, projectionCoords.xy + vec2(x, y) * texelSize).r;
+			float pcfDepth = texture(light.shadowMap, projectionCoords.xy + vec2(x, y) * texelSize).r;
 			shadow += currentDepth - bias > pcfDepth ? 1.0 : 0.0;
 		}
 	}
@@ -194,6 +205,21 @@ float shadowCalculation(vec4 fragmentPositionInLightSpace, vec3 normal, vec3 lig
 
 	return shadow;
 }
+
+//float shadowCubeMapCalculation(vec3 fragPos, vec3 lightPos, samplerCube depthMap, float farPlane)
+//{
+//	vec3 fragToLight = fragPos - lightPos;
+//	float closestDepth = texture(depthMap, fragToLight).r;
+//
+//	closestDepth *= farPlane;
+//
+//	float currentDepth = length(fragToLight);
+//
+//	float bias = 0.05;
+//	float shadow = currentDepth - bias > closestDepth ? 1.0 : 0.0;
+//
+//	return shadow;
+//}
 
 vec3 gammaCorrection(vec3 fragmentColor, float gamma)
 {

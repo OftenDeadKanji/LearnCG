@@ -41,6 +41,7 @@ namespace RedWood::MVC
 		Camera camera;
 
 		Shader depthMapShader;
+		Shader depthCubeMapShader;
 
 		DirectionalLight dirLight;
 		vec3 dirLightDirection{};

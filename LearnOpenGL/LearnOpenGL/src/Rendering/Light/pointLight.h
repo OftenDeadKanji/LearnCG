@@ -17,6 +17,8 @@ namespace RedWood
 		float getStrength() const;
 		void setStrength(float strength);
 	private:
+		void createDepthMap() override;
+
 		vec3 position;
 		float strength;
 

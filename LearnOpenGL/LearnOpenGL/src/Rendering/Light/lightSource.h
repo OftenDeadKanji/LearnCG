@@ -26,7 +26,7 @@ namespace RedWood
 		static constexpr vec2 shadowResolution{ 1024, 1024 };
 		const Texture& getDepthMap() const;
 	protected:
-		void createDepthMap();
+		virtual void createDepthMap();
 
 		vec3 color;
 

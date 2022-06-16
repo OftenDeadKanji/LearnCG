@@ -1,0 +1,15 @@
+target_sources(LearnOpenGL
+	PUBLIC
+	"EventManager/eventManager.h"
+	"EventManager/eventType.h"
+	"Keyboard/keyboard.h"
+	"Keyboard/keyboardKey.h"
+	"Keyboard/keyboardKeyAction.h"
+	"Mouse/mouse.h"
+	"Mouse/mouseButton.h"
+	"Mouse/mouseButtonAction.h"
+	PRIVATE
+	"EventManager/eventManager.cpp"
+	"Keyboard/keyboard.cpp"
+	"Mouse/mouse.cpp"
+)

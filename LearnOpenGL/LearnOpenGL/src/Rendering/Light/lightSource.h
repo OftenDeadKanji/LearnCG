@@ -1,5 +1,9 @@
 #pragma once
+#include <string>
+#include "glad/glad.h"
 #include "../Shader/shader.h"
+#include "../../Utilities/types.h"
+#include "../Texture/texture.h"
 
 namespace RedWood
 {

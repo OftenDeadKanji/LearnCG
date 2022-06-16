@@ -1,5 +1,6 @@
-#include "pch.h"
 #include "subShader.h"
+#include <fstream>
+#include <iostream>
 
 namespace RedWood
 {

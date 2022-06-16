@@ -1,0 +1,11 @@
+target_sources(LearnOpenGL
+	PUBLIC
+	"attenuation.h"
+	"lightSource.h"
+	"pointLight.h"
+	"directionalLight.h"
+	PRIVATE
+	"lightSource.cpp"
+	"pointLight.cpp"
+	"directionalLight.cpp"
+)

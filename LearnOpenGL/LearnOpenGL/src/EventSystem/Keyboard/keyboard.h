@@ -1,4 +1,6 @@
 #pragma once
+#include <array>
+#include "keyboardKey.h"
 
 namespace RedWood::EventSystem
 {

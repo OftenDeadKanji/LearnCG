@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "directionalLight.h"
 
 namespace RedWood

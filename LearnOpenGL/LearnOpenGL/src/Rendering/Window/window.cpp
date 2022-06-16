@@ -1,5 +1,7 @@
-#include "pch.h"
 #include "window.h"
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 #pragma region GLFW callback functions
 void framebuffer_size_callback(GLFWwindow* window, const int width, const int height)

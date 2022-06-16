@@ -1,4 +1,7 @@
 #pragma once
+#include <array>
+#include "mouseButton.h"
+#include "../../Utilities/types.h"
 
 namespace RedWood::EventSystem
 {

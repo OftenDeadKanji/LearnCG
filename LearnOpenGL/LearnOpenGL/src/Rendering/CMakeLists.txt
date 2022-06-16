@@ -1,0 +1,6 @@
+add_subdirectory("Camera")
+add_subdirectory("Light")
+add_subdirectory("Shader")
+add_subdirectory("Texture")
+add_subdirectory("Vertex")
+add_subdirectory("Window")

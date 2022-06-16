@@ -1,6 +1,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
-
+#include "../../Utilities/types.h"
+#include "glad/glad.h"
 #include "textureType.h"
 
 namespace RedWood

@@ -1,0 +1,9 @@
+target_sources(LearnOpenGL
+	PUBLIC
+	"windowMode.h"
+	"windowProperties.h"
+	"window.h"
+	PRIVATE
+	"windowProperties.cpp"
+	"window.cpp"
+)

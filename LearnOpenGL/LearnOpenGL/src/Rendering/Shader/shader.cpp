@@ -1,5 +1,6 @@
-#include "pch.h"
 #include "shader.h"
+#include <iostream>
+#include "glm/gtc/type_ptr.hpp"
 
 namespace RedWood
 {

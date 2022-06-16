@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "resourceManager.h"
 
 namespace RedWood

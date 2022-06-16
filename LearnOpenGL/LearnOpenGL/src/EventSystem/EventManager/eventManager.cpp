@@ -1,5 +1,6 @@
-#include "pch.h"
 #include "eventManager.h"
+#include "../Keyboard/keyboard.h"
+#include "../Mouse/mouse.h"
 
 namespace RedWood::EventSystem
 {

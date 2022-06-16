@@ -1,19 +1,29 @@
-#include "pch.h"
 #include "view.h"
-#include "controller.h"
+#include <string>
 #include <format>
+#include <iostream>
+#include "glad/glad.h"
+#include "controller.h"
+#include "../../EventSystem/Keyboard/keyboard.h"
+#include "../../EventSystem/Mouse/mouse.h"
+
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+
+
 
 namespace RedWood::MVC
 {
 	View::View(MVC::Controller& controller)
-		: controller(controller),
-		window(WindowProperties({ 1600, 900 }, WindowMode::Windowed, "LearnOpenGL", "")),
-		camera({ 0.0f, 0.0f, 5.0f }, { 0.5f, 0.0f, 0.0f }),
-		dirLight({ 1.0f, 1.0f, 1.0f }, { 0.5f, -1.0f, -1.0f }),
-		dirLightDirection({ 0.5f, -1.0f, -1.0f }),
-		dirLightColor({ 1.0f, 1.0f, 1.0f })
-		,backpack("Resources/Models/primitives/sphere.obj", { 0.0f, 0.0f, 0.0f })
-		//,backpack("Resources/Models/backpack/backpack.obj", { 0.0f, 0.0f, 0.0f })
+		: controller(controller)
+		, window(WindowProperties({ 1600, 900 }, WindowMode::Windowed, "LearnOpenGL", ""))
+		, camera({ 0.0f, 0.0f, 5.0f }, { 0.5f, 0.0f, 0.0f })
+		, dirLight({ 1.0f, 1.0f, 1.0f }, { 0.5f, -1.0f, -1.0f })
+		, dirLightDirection({ 0.5f, -1.0f, -1.0f })
+		, dirLightColor({ 1.0f, 1.0f, 1.0f })
+		, backpack("Resources/Models/primitives/sphere.obj", { 0.0f, 0.0f, 0.0f })
+		//, backpack("Resources/Models/backpack/backpack.obj", { 0.0f, 0.0f, 0.0f })
 		, floor("Resources/Models/primitives/plane.obj", { 0.0f, -1.8f, 0.0f })
 	{
 		this->window.attachEventManager(this->eventManager);
@@ -84,7 +94,7 @@ namespace RedWood::MVC
 			const float yaw = EventSystem::Mouse::position.x - this->mousePrevPos.x;
 			const float pitch = EventSystem::Mouse::position.y - this->mousePrevPos.y;
 
-			//const vec3 cameraRotation(pitch, yaw, 0.0f);
+			const vec3 cameraRotation(pitch, yaw, 0.0f);
 			//this->camera.rotateCamera(cameraRotation * this->mouseSpeed * deltaTime);
 			this->camera.turn(-yaw * this->mouseSpeed * deltaTime);
 			this->camera.pitch(-pitch * this->mouseSpeed * deltaTime);
@@ -160,8 +170,8 @@ namespace RedWood::MVC
 
 	void View::initShaders()
 	{
-		auto meshVert = SubShader::createShaderFromFile("Shaders/model_main.vert", SubShader::Type::Vertex);
-		auto meshFrag = SubShader::createShaderFromFile("Shaders/model_main.frag", SubShader::Type::Fragment);
+		auto meshVert = SubShader::createShaderFromFile("Resources/Shaders/model_main.vert", SubShader::Type::Vertex);
+		auto meshFrag = SubShader::createShaderFromFile("Resources/Shaders/model_main.frag", SubShader::Type::Fragment);
 
 		this->meshShader.attachSubShader(meshVert);
 		this->meshShader.attachSubShader(meshFrag);
@@ -171,8 +181,8 @@ namespace RedWood::MVC
 			std::cout << "Linking mesh shader failed.\n";
 		}
 
-		auto depthMapVert = SubShader::createShaderFromFile("Shaders/depthMap.vert", SubShader::Type::Vertex);
-		auto depthMapFrag = SubShader::createShaderFromFile("Shaders/depthMap.frag", SubShader::Type::Fragment);
+		auto depthMapVert = SubShader::createShaderFromFile("Resources/Shaders/depthMap.vert", SubShader::Type::Vertex);
+		auto depthMapFrag = SubShader::createShaderFromFile("Resources/Shaders/depthMap.frag", SubShader::Type::Fragment);
 
 		this->depthMapShader.attachSubShader(depthMapVert);
 		this->depthMapShader.attachSubShader(depthMapFrag);
@@ -216,7 +226,7 @@ namespace RedWood::MVC
 
 	void View::renderScene()
 	{
-		window.fillWithColorRGB({ 0, 0, 0 });
+		window.fillWithColorRGB({ 100, 250, 0 });
 
 		checkImGUI();
 
@@ -250,7 +260,7 @@ namespace RedWood::MVC
 		tr = glm::translate(tr, { 0.0f, -2.0f, 0.0f });
 		meshShader.setMat4("model", tr);
 		floor.render(meshShader);
-
+		
 		window.swapBuffers();
 	}
 
@@ -271,7 +281,7 @@ namespace RedWood::MVC
 		for (int i = 0; i < this->pointLights.size(); ++i)
 		{
 			std::string prefix = std::format("pointLights[{}].", i);
-
+		
 			pointLights[i].setLightInShader(shader, prefix);
 		}
 	}

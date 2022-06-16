@@ -1,0 +1,12 @@
+target_sources(LearnOpenGL
+	PUBLIC
+	"General/application.h"
+	"MVC/controller.h"
+	"MVC/model.h"
+	"MVC/view.h"
+	PRIVATE
+	"General/application.cpp"
+	"MVC/controller.cpp"
+	"MVC/model.cpp"
+	"MVC/view.cpp"
+)

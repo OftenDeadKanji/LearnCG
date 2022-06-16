@@ -1,4 +1,12 @@
 #pragma once
+#include "../../Utilities/types.h"
+#include "glm/glm.hpp"
+
+#include "glm/gtc/quaternion.hpp"
+#include "glm/gtc/matrix_transform.hpp"
+#include "glm/gtc/type_ptr.hpp"
+#include "glm/gtx/quaternion.hpp"
+#include "glm/gtx/rotate_vector.hpp"
 
 namespace RedWood
 {
@@ -23,6 +31,8 @@ namespace RedWood
 		void pitch(float pitchInDeg);
 		void yaw(float yawInDeg);
 		void turn(float turnRadians);
+
+		void renderScene() const;
 	private:
 		vec3 position{};
 

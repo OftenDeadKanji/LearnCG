@@ -1,6 +1,9 @@
-#include "pch.h"
 #include "mesh.h"
+#include <iostream>
+//#include <boost/filesystem.hpp>
 #include "../Rendering/Vertex/vertex.h"
+#include "glm/gtx/transform.hpp"
+#include "../ResourceManager/resourceManager.h"
 
 namespace RedWood
 {

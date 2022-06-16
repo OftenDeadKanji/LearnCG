@@ -1,0 +1,264 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						14,
+						15
+					],
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "src",
+					"childIndexes" : 
+					[
+						2,
+						3,
+						4,
+						5,
+						12,
+						13
+					],
+					"jsonFile" : "directory-src-Debug-c94b7c2814d5a21df52c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "src"
+				},
+				{
+					"build" : "src/Application",
+					"jsonFile" : "directory-src.Application-Debug-3ca978bde9065e0c6d13.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/Application"
+				},
+				{
+					"build" : "src/EventSystem",
+					"jsonFile" : "directory-src.EventSystem-Debug-91e93ad997afeef68efa.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/EventSystem"
+				},
+				{
+					"build" : "src/Mesh",
+					"jsonFile" : "directory-src.Mesh-Debug-44e6fcbfd2a5fe850fc3.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/Mesh"
+				},
+				{
+					"build" : "src/Rendering",
+					"childIndexes" : 
+					[
+						6,
+						7,
+						8,
+						9,
+						10,
+						11
+					],
+					"jsonFile" : "directory-src.Rendering-Debug-c3adb04fa51fb4e53710.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/Rendering"
+				},
+				{
+					"build" : "src/Rendering/Camera",
+					"jsonFile" : "directory-src.Rendering.Camera-Debug-11e633aeca6528c421a0.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "src/Rendering/Camera"
+				},
+				{
+					"build" : "src/Rendering/Light",
+					"jsonFile" : "directory-src.Rendering.Light-Debug-7516483fe7cef8031373.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "src/Rendering/Light"
+				},
+				{
+					"build" : "src/Rendering/Shader",
+					"jsonFile" : "directory-src.Rendering.Shader-Debug-a32f13937382f45b2980.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "src/Rendering/Shader"
+				},
+				{
+					"build" : "src/Rendering/Texture",
+					"jsonFile" : "directory-src.Rendering.Texture-Debug-eecfdc8e71f5eb156981.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "src/Rendering/Texture"
+				},
+				{
+					"build" : "src/Rendering/Vertex",
+					"jsonFile" : "directory-src.Rendering.Vertex-Debug-5d322baacf70b042c5f8.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "src/Rendering/Vertex"
+				},
+				{
+					"build" : "src/Rendering/Window",
+					"jsonFile" : "directory-src.Rendering.Window-Debug-b6e51d66a439b1b06169.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 5,
+					"projectIndex" : 0,
+					"source" : "src/Rendering/Window"
+				},
+				{
+					"build" : "src/ResourceManager",
+					"jsonFile" : "directory-src.ResourceManager-Debug-389774d76cccb3b0b048.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/ResourceManager"
+				},
+				{
+					"build" : "src/Utilities",
+					"jsonFile" : "directory-src.Utilities-Debug-5b558971a27c7c7a7ae1.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 0,
+					"source" : "src/Utilities"
+				},
+				{
+					"build" : "dependencies/Glad",
+					"jsonFile" : "directory-dependencies.Glad-Debug-a8b1891560665ae7ce35.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "dependencies/Glad"
+				},
+				{
+					"build" : "dependencies/imgui",
+					"jsonFile" : "directory-dependencies.imgui-Debug-30d58ee23d2202678095.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.18"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "dependencies/imgui"
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11,
+						12,
+						13,
+						14,
+						15
+					],
+					"name" : "LearnOpenGL",
+					"targetIndexes" : 
+					[
+						0
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "LearnOpenGL::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-LearnOpenGL-Debug-5e8601d89c9ea373d15b.json",
+					"name" : "LearnOpenGL",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "D:/Users/Kanjiklub/Documents/GitHub/LearnCG/LearnOpenGL/LearnOpenGL/out/build/x64-Debug",
+		"source" : "D:/Users/Kanjiklub/Documents/GitHub/LearnCG/LearnOpenGL/LearnOpenGL"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

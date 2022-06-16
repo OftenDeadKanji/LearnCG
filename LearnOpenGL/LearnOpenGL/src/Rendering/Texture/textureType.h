@@ -1,5 +1,6 @@
 #ifndef TEXTURETYPE_H
 #define TEXTURETYPE_H
+#include <string>
 
 namespace RedWood
 {

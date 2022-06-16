@@ -1,6 +1,8 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include <chrono>
+
 #include "model.h"
 #include "view.h"
 

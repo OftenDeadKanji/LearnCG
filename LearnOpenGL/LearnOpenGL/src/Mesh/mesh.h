@@ -1,6 +1,14 @@
 #pragma once
+#include <string>
+#include <vector>
+
 #include "submesh.h"
 #include "../Rendering/Texture/texture.h"
+#include "../Utilities/types.h"
+
+#include "assimp/Importer.hpp"
+#include "assimp/scene.h"
+#include "assimp/postprocess.h"
 
 namespace RedWood
 {

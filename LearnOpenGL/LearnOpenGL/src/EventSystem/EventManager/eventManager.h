@@ -4,6 +4,8 @@
 #include "../Keyboard/keyboardKeyAction.h"
 #include "../Mouse/mouseButton.h"
 #include "../Mouse/mouseButtonAction.h"
+#include <queue>
+#include "../../Utilities/types.h"
 
 namespace RedWood::EventSystem
 {

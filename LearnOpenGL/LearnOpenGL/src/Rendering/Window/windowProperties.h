@@ -1,6 +1,8 @@
 #ifndef WINDOW_PROPERTIES_H
 #define WINDOW_PROPERTIES_H
 #include "windowMode.h"
+#include "../../Utilities/types.h"
+#include <string>
 
 namespace RedWood
 {

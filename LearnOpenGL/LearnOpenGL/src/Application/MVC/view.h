@@ -8,6 +8,9 @@
 
 #include "../../Mesh/mesh.h"
 
+#include "../../EventSystem/EventManager/eventManager.h"
+#include "../../Utilities/types.h"
+
 namespace RedWood::MVC
 {
 	class Controller;
